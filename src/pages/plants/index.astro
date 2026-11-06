@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PlantGrid from '../../components/PlantGrid.astro';
+import { categories, plants } from '../../data/catalog';
+---
+
+<BaseLayout title="Plant collections | Abdul Jabbar Nursery Farm" description="Browse plant collections from Abdul Jabbar Nursery Farm in Pattoki.">
+  <main id="main" class="section-wrap">
+    <header class="page-heading">
+      <p class="section-kicker">The plant directory</p>
+      <h1>Explore the collections.</h1>
+      <p>Explore our plant collections and find the plants you are looking for.</p>
+    </header>
+    <PlantGrid plants={plants} filterCategories />
+  </main>
+</BaseLayout>

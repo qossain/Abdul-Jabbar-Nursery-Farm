@@ -1,0 +1,36 @@
+---
+import '../styles/global.css';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { heroPhoto, heroPhotoMobile } from '../data/catalog';
+
+interface Props {
+  title: string;
+  description: string;
+  home?: boolean;
+}
+
+const { title, description, home = false } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#123b2b" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+    {home && <link rel="preload" as="image" href={heroPhoto} media="(min-width: 701px)" fetchpriority="high" />}
+    {home && <link rel="preload" as="image" href={heroPhotoMobile} media="(max-width: 700px)" fetchpriority="high" />}
+  </head>
+  <body class={home ? 'home-page' : 'inner-page'}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <SiteHeader home={home} />
+    <slot />
+    <SiteFooter />
+    <a class="whatsapp-float" href="https://wa.me/923126047941" target="_blank" rel="noreferrer" aria-label="Message Abdul Jabbar Nursery on WhatsApp">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M12.04 2a9.95 9.95 0 0 0-8.59 15.04L2 22l5.1-1.34A9.96 9.96 0 1 0 12.04 2Zm0 18.15a8.16 8.16 0 0 1-4.16-1.14l-.3-.18-3.03.8.8-2.95-.2-.31a8.19 8.19 0 1 1 6.89 3.78Zm4.5-6.13c-.25-.12-1.45-.71-1.67-.8-.23-.08-.4-.12-.56.13-.16.24-.63.8-.77.96-.14.16-.28.18-.52.06-.25-.12-1.04-.38-1.98-1.22-.73-.65-1.22-1.45-1.36-1.7-.15-.24-.02-.38.1-.5.1-.11.24-.29.37-.43.12-.15.16-.25.24-.41.08-.17.04-.31-.02-.43-.06-.13-.55-1.33-.76-1.82-.2-.48-.4-.41-.56-.42h-.47c-.17 0-.44.06-.67.31-.22.24-.86.84-.86 2.05 0 1.2.88 2.36 1 2.52.12.17 1.72 2.63 4.16 3.69.58.25 1.03.4 1.38.51.58.18 1.1.16 1.52.1.46-.07 1.45-.59 1.65-1.16.2-.58.2-1.07.14-1.17-.06-.1-.23-.16-.47-.27Z" /></svg>
+    </a>
+  </body>
+</html>

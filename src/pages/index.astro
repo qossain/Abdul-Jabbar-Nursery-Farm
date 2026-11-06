@@ -1,0 +1,42 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import Experience from '../components/Experience.astro';
+import CategoryCarousel from '../components/CategoryCarousel.astro';
+import Services from '../components/Services.astro';
+import Testimonials from '../components/Testimonials.astro';
+import PlantCard from '../components/PlantCard.astro';
+import { plants } from '../data/catalog';
+
+const featuredSlugs = [
+  'indoor-monstera-deliciosa', 'outdoor-bougainvillea', 'fruit-anwar-ratol-mango',
+  'bonsai-ficus-retusa-bonsai', 'cactus-prickly-pear-cactus', 'flowering-red-rose',
+  'flowering-pink-rose', 'palms-areca-palm',
+];
+const featuredPlants = plants.filter((plant) => featuredSlugs.includes(plant.slug));
+---
+
+<BaseLayout
+  title="Abdul Jabbar Nursery Farm | Pattoki"
+  description="Explore Abdul Jabbar Nursery Farm in Pattoki, a nursery and landscaping business rooted in the region since 1978. Browse plant collections and contact the nursery."
+  home
+>
+  <main id="main">
+    <Hero />
+    <Experience />
+    <CategoryCarousel />
+    <Services />
+    <section class="featured-products" aria-labelledby="featured-products-title">
+      <div class="section-wrap">
+        <div class="collections-heading featured-heading">
+          <h2 id="featured-products-title">Trending Products</h2>
+        </div>
+        <div class="plant-grid">
+          {featuredPlants.map((plant) => <PlantCard plant={plant} />)}
+        </div>
+        <div class="featured-action"><a class="button button-dark" href="/plants/"><span>View all plants</span></a></div>
+      </div>
+    </section>
+    <Testimonials />
+  </main>
+</BaseLayout>

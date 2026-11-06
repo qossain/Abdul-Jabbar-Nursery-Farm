@@ -1,0 +1,146 @@
+export type Category = {
+  slug: string;
+  title: string;
+  coverImage: string;
+  images: string[];
+  description: string;
+  basePrice: number;
+};
+
+export type Plant = {
+  slug: string;
+  name: string;
+  category: string;
+  image: string;
+  price: number;
+};
+
+const numberedImages = (prefix: string, count: number, digits = 2) =>
+  Array.from({ length: count }, (_, index) => `${prefix}${String(index + 1).padStart(digits, '0')}.webp`);
+const namedImages = (prefix: string, ...names: string[]) =>
+  names.map((name, index) => `${prefix}${String(index + 1).padStart(2, '0')}-${name}.webp`);
+const localImages = (...files: string[]) => files.map((file) => `/plant-images/${file}`);
+
+export const heroPhoto = '/hero-legacy-desktop.webp';
+export const heroPhotoMobile = '/hero-rooftop-mobile.webp';
+
+export const categories: Category[] = [
+  {
+    slug: 'indoor', title: 'Indoor plants', basePrice: 1200,
+    images: localImages(...numberedImages('indoor-', 10, 3), ...namedImages('ornamental-', 'bird-of-paradise', 'cordyline', 'dracaena-marginata', 'coleus', 'caladium', 'fern'), 'ornamental-10-red-anthurium.webp'),
+    coverImage: '', description: 'Leaf forms and easy care plants for rooms, offices and sheltered spaces.',
+  },
+  {
+    slug: 'outdoor', title: 'Outdoor plants', basePrice: 1600,
+    images: localImages(
+      ...namedImages('outdoor-', 'bougainvillea', 'hibiscus-shrub', 'jasmine-shrub', 'gardenia-shrub', 'oleander-shrub', 'ixora-flowering-shrub', 'lantana-plant', 'ficus-benjamina', 'duranta-golden-shrub', 'croton-shrub'),
+      ...namedImages('trees-', 'neem-tree', 'amaltas-golden-shower-tree', 'jacaranda-tree', 'gulmohar-flamboyant-tree', 'banyan-sapling', 'moringa-tree', 'ficus-tree', 'jamun-tree', 'peepal-tree', 'bottlebrush-tree'),
+      ...namedImages('topiary-', 'deer-shaped-living-topiary', 'giraffe-shaped-living-topiary', 'elephant-shaped-living-topiary', 'peacock-shaped-living-topiary', 'rabbit-shaped-living-topiary', 'swan-shaped-living-topiary', 'spiral-topiary', 'cone-shaped-topiary', 'ball-shaped-topiary', 'tiered-cloud-shaped-topiary'),
+    ),
+    coverImage: '', description: 'Trees, shrubs and sculptural greenery for gardens and open air settings.',
+  },
+  {
+    slug: 'fruit', title: 'Fruit plants', basePrice: 1800,
+    images: localImages(...namedImages('fruit-', 'mango-sapling', 'guava-sapling', 'lemon-tree', 'orange-tree', 'pomegranate-tree', 'fig-tree', 'olive-tree', 'dragon-fruit-cactus', 'blueberry-bush', 'pineapple-plant')),
+    coverImage: '', description: 'Fruit tree varieties and edible plants for home orchards and gardens.',
+  },
+  {
+    slug: 'bonsai', title: 'Bonsai', basePrice: 4500,
+    images: localImages(...namedImages('bonsai-', 'ficus-bonsai', 'juniper-bonsai', 'bougainvillea-bonsai', 'chinese-elm-bonsai', 'jade-bonsai', 'olive-bonsai', 'pomegranate-bonsai', 'ficus-banyan-bonsai', 'azalea-bonsai', 'carmona-bonsai')),
+    coverImage: '', description: 'Small trees shaped over time for courtyards, terraces and considered interiors.',
+  },
+  {
+    slug: 'cactus', title: 'Cactus plants', basePrice: 700,
+    images: localImages(...namedImages('succulents-', 'aloe-vera', 'echeveria-rosette-succulent', 'haworthia-succulent', 'jade-plant', 'prickly-pear-cactus', 'golden-barrel-cactus', 'columnar-cactus', 'agave', 'burro-tail-succulent', 'sedum-succulent')),
+    coverImage: '', description: 'Distinctive desert forms for bright windows, patios and rock gardens.',
+  },
+  {
+    slug: 'flowering', title: 'Flowering plants', basePrice: 900,
+    images: localImages(...namedImages('flowering-', 'red-rose', 'pink-rose', 'marigold', 'petunia', 'geranium', 'chrysanthemum', 'bougainvillea', 'plumeria', 'hibiscus', 'zinnia'), 'ornamental-07-ornamental-grass.webp', 'ornamental-08-canna-lily.webp', 'ornamental-09-tropical-heliconia.webp'),
+    coverImage: '', description: 'Seasonal color and flowering shrubs for borders, pots and landscape plans.',
+  },
+  {
+    slug: 'palms', title: 'Palms', basePrice: 2200,
+    images: localImages(...namedImages('palms-', 'areca-palm', 'date-palm', 'foxtail-palm', 'bottle-palm', 'fan-palm', 'lady-palm', 'sago-palm', 'parlour-palm', 'majesty-palm', 'coconut-palm-sapling')),
+    coverImage: '', description: 'Architectural palms for entranceways, terraces and larger gardens.',
+  },
+];
+
+categories.forEach((category) => {
+  category.coverImage = category.images[category.slug === 'outdoor' ? 20 : category.slug === 'cactus' ? 5 : 0];
+});
+
+const names: Record<string, string[]> = {
+  indoor: [
+    'Monstera Deliciosa', 'Monstera Adansonii', 'Philodendron Brasil', 'Heartleaf Philodendron', 'Golden Pothos',
+    'Marble Queen Pothos', 'Snake Plant Laurentii', 'ZZ Plant', 'Peace Lily', 'Rubber Plant Burgundy',
+    'Fiddle Leaf Fig', 'Areca Palm', 'Parlor Palm', 'Calathea Orbifolia', 'Calathea Medallion',
+    'Aglaonema Red', 'Chinese Evergreen Silver Bay', 'Dracaena Marginata', 'Dracaena Fragrans', 'Lucky Bamboo',
+    'Boston Fern', 'Bird of Paradise', 'Alocasia Polly', 'Syngonium Pink', 'Spider Plant',
+    'Aloe Vera', 'English Ivy', 'Red Anthurium', 'Dieffenbachia', 'Hoya Carnosa',
+  ],
+  outdoor: [
+    'Bougainvillea', 'Ficus Nitida', 'Ficus Benjamina', 'Murraya', 'Duranta Gold',
+    'Ixora', 'Hibiscus', 'Plumeria', 'Croton', 'Thuja',
+    'Cypress', 'Juniper', 'Ashoka Tree', 'Neem Tree', 'Sukh Chain Tree',
+    'Amaltas', 'Gul Mohar', 'Bottlebrush Tree', 'Poinciana', 'Oleander',
+    'Lantana', 'Jasmine', 'Star Jasmine', 'Schefflera', 'Agave',
+    'Yucca', 'Clumping Bamboo', 'Podocarpus', 'Pittosporum', 'Gardenia',
+  ],
+  fruit: [
+    'Anwar Ratol Mango', 'Chaunsa Mango', 'Sindhri Mango', 'Dusehri Mango', 'Langra Mango',
+    'Sufaid Chaunsa Mango', 'Azeem Chaunsa Mango', 'Neelam Mango', 'Malda Mango', 'Fajri Mango',
+    'Gola Guava', 'Allahabadi Surkha Guava', 'Sada Bahar Guava', 'Kinnow Mandarin', 'Mosambi Sweet Lime',
+    'Kaghzi Lime', 'Malta Orange', 'Grapefruit', 'Falsa', 'Jamun',
+    'Indian Jujube Ber', 'Loquat', 'Bhagwa Pomegranate', 'Black Mission Fig', 'Dwarf Cavendish Banana',
+    'Red Lady Papaya', 'Dragon Fruit', 'Blueberry', 'Pineapple', 'Strawberry',
+  ],
+  bonsai: [
+    'Ficus Retusa Bonsai', 'Ficus Microcarpa Bonsai', 'Ficus Ginseng Bonsai', 'Ficus Benjamina Bonsai', 'Banyan Bonsai',
+    'Chinese Elm Bonsai', 'Japanese Juniper Bonsai', 'Chinese Juniper Bonsai', 'Bougainvillea Bonsai', 'Jade Bonsai',
+    'Fukien Tea Bonsai', 'Pomegranate Bonsai', 'Olive Bonsai', 'Tamarind Bonsai', 'Dwarf Jade Bonsai',
+    'Dwarf Umbrella Bonsai', 'Carmona Bonsai', 'Serissa Bonsai', 'Boxwood Bonsai', 'Privet Bonsai',
+    'Japanese Maple Bonsai', 'Azalea Bonsai', 'Chinese Pine Bonsai', 'Cypress Bonsai', 'Brush Cherry Bonsai',
+    'Pemphis Bonsai', 'Adenium Bonsai', 'Mulberry Bonsai', 'Trident Maple Bonsai', 'Black Pine Bonsai',
+  ],
+  cactus: [
+    'Golden Barrel Cactus', 'Ladyfinger Cactus', 'Old Lady Cactus', 'Bunny Ears Cactus', 'Prickly Pear Cactus',
+    'Peruvian Apple Cactus', 'Spiral Cereus Cactus', 'Easter Lily Cactus', 'Moon Cactus', 'Bishop Cap Cactus',
+    'Monk Hood Cactus', 'Devil Tongue Cactus', 'Melon Cactus', 'Rebutia Cactus', 'Balloon Cactus',
+    'Mexican Fence Post Cactus', 'Dragon Fruit Cactus', 'Old Man Cactus', 'Silver Torch Cactus', 'Night Blooming Cereus',
+    'Mistletoe Cactus', 'Holiday Cactus', 'Blue Torch Cactus', 'Peanut Cactus', 'Feather Cactus',
+    'Star Cactus', 'Paper Spine Cactus', 'Browningia Candelaris', 'Mexican Organ Pipe Cactus', 'Harrisia Cactus',
+  ],
+  flowering: [
+    'Red Rose', 'Pink Rose', 'White Rose', 'Yellow Rose', 'Desi Rose',
+    'Double Delight Rose', 'Iceberg Rose', 'Marigold', 'Petunia', 'Geranium',
+    'Chrysanthemum', 'Bougainvillea', 'Plumeria', 'Hibiscus', 'Zinnia',
+    'Dahlia', 'Gardenia', 'Jasmine', 'Mogra', 'Tuberose',
+    'Canna Lily', 'Day Lily', 'Gladiolus', 'Carnation', 'Cosmos',
+    'Vinca', 'Pentas', 'Portulaca', 'Pansy', 'Morning Glory',
+  ],
+  palms: [
+    'Areca Palm', 'Royal Palm', 'Foxtail Palm', 'Bottle Palm', 'Bismarck Palm',
+    'Date Palm', 'Canary Island Date Palm', 'Pygmy Date Palm', 'Chinese Fan Palm', 'Washingtonia Palm',
+    'Mexican Fan Palm', 'Lady Palm', 'Bamboo Palm', 'Kentia Palm', 'Majesty Palm',
+    'Raphis Palm', 'Fishtail Palm', 'Sabal Palm', 'Queen Palm', 'Pindo Palm',
+    'Triangle Palm', 'Christmas Palm', 'Coconut Palm', 'Traveller Palm', 'Paurotis Palm',
+    'Alexandra Palm', 'Carpentaria Palm', 'Spindle Palm', 'Licuala Palm', 'Ravenala Palm',
+  ],
+};
+
+export const plants: Plant[] = categories.flatMap((category) => {
+  const collection = names[category.slug];
+  if (!collection || collection.length !== 30) throw new Error(`The ${category.slug} collection must contain 30 listings.`);
+  return collection.map((name, index) => ({
+    slug: `${category.slug}-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`,
+    name,
+    category: category.slug,
+    image: category.images[index % category.images.length],
+    price: category.basePrice + ((index * 347) % (category.basePrice * 3)),
+  }));
+});
+
+export const categoryFor = (slug: string) => categories.find((category) => category.slug === slug);
+export const plantsFor = (slug: string) => plants.filter((plant) => plant.category === slug);
+export const priceLabel = (amount: number) => 'Rs ' + new Intl.NumberFormat('en-PK').format(amount);

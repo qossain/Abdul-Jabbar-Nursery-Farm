@@ -1,0 +1,33 @@
+---
+import { heroPhoto, heroPhotoMobile } from '../data/catalog';
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <picture class="hero-visual" aria-hidden="true">
+    <source media="(max-width: 700px)" srcset={heroPhotoMobile} />
+    <img src={heroPhoto} alt="" width="1600" height="900" fetchpriority="high" decoding="async" />
+  </picture>
+  <div class="hero-shade" aria-hidden="true"></div>
+  <div class="hero-copy">
+    <p class="hero-kicker">Pattoki since 1978</p>
+    <h1 id="hero-title">A living legacy,<br /><em>shaped by nature.</em></h1>
+    <p class="hero-description">Plants and landscapes, thoughtfully grown in Pattoki.</p>
+    <div class="hero-actions">
+      <a class="button button-light" href="/plants/">Explore our plants</a>
+      <a class="hero-secondary" href="https://wa.me/923126047941?text=Hello%2C%20I%20would%20like%20to%20discuss%20a%20landscape%20project." target="_blank" rel="noreferrer">Plan a landscape</a>
+    </div>
+  </div>
+</section>
+
+<script>
+  import { gsap } from 'gsap';
+
+  const hero = document.querySelector('.hero');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (hero && !reducedMotion) {
+    gsap.fromTo(hero.querySelectorAll('.hero-kicker, .hero-copy h1, .hero-description, .hero-actions'),
+      { autoAlpha: 0, y: 18 },
+      { autoAlpha: 1, y: 0, duration: 0.72, stagger: 0.1, ease: 'power3.out', delay: 0.12 });
+  }
+</script>

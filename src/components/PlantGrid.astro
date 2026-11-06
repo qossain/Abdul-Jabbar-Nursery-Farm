@@ -1,0 +1,90 @@
+---
+import { categories, type Plant } from '../data/catalog';
+import PlantCard from './PlantCard.astro';
+
+interface Props {
+  plants: Plant[];
+  filterCategories?: boolean;
+}
+
+const { plants, filterCategories = false } = Astro.props;
+---
+
+<div class="plant-tools" data-plant-tools>
+  <label class="visually-hidden" for="plant-search">Search plants</label>
+  <input id="plant-search" class="plant-search" type="search" placeholder="Search plant names" autocomplete="off" data-plant-search />
+  {filterCategories && (
+    <>
+      <label class="visually-hidden" for="plant-category">Choose a plant collection</label>
+      <select id="plant-category" class="plant-sort" data-plant-category>
+        <option value="all">All collections</option>
+        {categories.map((category) => <option value={category.slug}>{category.title}</option>)}
+      </select>
+    </>
+  )}
+  <label class="visually-hidden" for="plant-sort">Sort by price</label>
+    <select id="plant-sort" class="plant-sort" data-plant-sort hidden={!filterCategories}>
+      <option value="featured">Featured</option>
+      <option value="low">Price low first</option>
+      <option value="high">Price high first</option>
+    </select>
+  {!filterCategories && <details class="sort-control" data-sort-menu>
+    <summary aria-label="Sort plants"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M7 12h10m-7 5h4" /></svg></summary>
+    <div class="sort-menu" aria-label="Sort plants">
+      <button type="button" data-sort-value="featured" aria-pressed="true">Featured</button>
+      <button type="button" data-sort-value="low" aria-pressed="false">Price low first</button>
+      <button type="button" data-sort-value="high" aria-pressed="false">Price high first</button>
+    </div>
+  </details>}
+  <span class={filterCategories ? 'result-count' : 'visually-hidden'} aria-live="polite" data-result-count>{plants.length} plants</span>
+</div>
+<div class="plant-grid" data-plant-grid>
+  {plants.map((plant, index) => <PlantCard plant={plant} priority={filterCategories && index < 4} />)}
+</div>
+<p class="empty-state" data-empty-state>No plants match that search. Try a different name.</p>
+
+<script>
+  const grid = document.querySelector<HTMLElement>('[data-plant-grid]');
+  const search = document.querySelector<HTMLInputElement>('[data-plant-search]');
+  const category = document.querySelector<HTMLSelectElement>('[data-plant-category]');
+  const sort = document.querySelector<HTMLSelectElement>('[data-plant-sort]');
+  const count = document.querySelector<HTMLElement>('[data-result-count]');
+  const empty = document.querySelector<HTMLElement>('[data-empty-state]');
+  const menu = document.querySelector<HTMLDetailsElement>('[data-sort-menu]');
+
+  if (grid && search && sort && count && empty) {
+    const cards = Array.from(grid.querySelectorAll<HTMLElement>('[data-plant-card]'));
+    const update = () => {
+      const query = search.value.trim().toLocaleLowerCase();
+      const selectedCategory = category?.value ?? 'all';
+      const matches = cards.filter((card) => {
+        const matchesText = card.dataset.name?.includes(query) ?? false;
+        const matchesCategory = selectedCategory === 'all' || card.dataset.category === selectedCategory;
+        return matchesText && matchesCategory;
+      });
+      const order = sort.value;
+      matches.sort((first, second) => order === 'featured'
+        ? cards.indexOf(first) - cards.indexOf(second)
+        : order === 'low'
+          ? Number(first.dataset.price) - Number(second.dataset.price)
+          : Number(second.dataset.price) - Number(first.dataset.price));
+      cards.forEach((card) => { card.hidden = !matches.includes(card); });
+      matches.forEach((card) => grid.append(card));
+      count.textContent = `${matches.length} ${matches.length === 1 ? 'plant' : 'plants'}`;
+      empty.style.display = matches.length ? 'none' : 'block';
+    };
+
+    search.addEventListener('input', update);
+    sort.addEventListener('change', update);
+    category?.addEventListener('change', update);
+    menu?.querySelectorAll<HTMLButtonElement>('[data-sort-value]').forEach((button) => button.addEventListener('click', () => {
+      sort.value = button.dataset.sortValue || 'featured';
+      menu.querySelectorAll<HTMLButtonElement>('[data-sort-value]').forEach((option) => option.setAttribute('aria-pressed', String(option === button)));
+      update();
+      menu.open = false;
+      menu.querySelector<HTMLElement>('summary')?.focus();
+    }));
+    document.addEventListener('click', (event) => { if (menu && !menu.contains(event.target as Node)) menu.open = false; });
+    document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && menu?.open) { menu.open = false; menu.querySelector<HTMLElement>('summary')?.focus(); } });
+  }
+</script>

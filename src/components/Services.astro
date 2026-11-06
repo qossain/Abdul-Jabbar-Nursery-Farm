@@ -1,0 +1,88 @@
+---
+const services = [
+  { title: 'Plant supply', description: 'Explore indoor and outdoor plants, fruit trees, bonsai, cactus, flowering plants and palms.', image: '/service-images/plant-supply.webp', link: '/plants/', action: 'Explore plants' },
+  { title: 'Landscape projects', description: 'Discuss planting and landscape planning for commercial spaces and larger developments.', image: '/service-images/landscape.webp', link: 'https://wa.me/923126047941?text=Hello%2C%20I%20would%20like%20to%20discuss%20a%20landscape%20project.', action: 'Discuss your project' },
+  { title: 'Garden design', description: 'Bring your garden ideas to life with planting plans, lawns and rooftop spaces.', image: '/service-images/garden.webp', link: 'https://wa.me/923126047941?text=Hello%2C%20I%20would%20like%20to%20discuss%20a%20garden.', action: 'Discuss your garden' },
+  { title: 'Topiary art', description: 'Discover shaped plants for entrances, gardens and distinctive landscape features.', image: '/service-images/topiary.webp', link: 'https://wa.me/923126047941?text=Hello%2C%20I%20would%20like%20to%20ask%20about%20topiary.', action: 'Ask about topiary' },
+  { title: 'Garden care', description: 'Ask about ongoing care and maintenance for your garden and plants.', image: '/service-images/care.webp', link: 'https://wa.me/923126047941?text=Hello%2C%20I%20would%20like%20to%20ask%20about%20garden%20maintenance.', action: 'Ask about garden care' },
+];
+---
+
+<section class="services" aria-labelledby="services-title">
+  <div class="section-wrap">
+    <div class="services-heading">
+      <div><p class="section-kicker">Plants and landscapes</p><h2 id="services-title">Our services</h2></div>
+      <p>From choosing plants to planning a landscape, find the right place to begin.</p>
+    </div>
+    <div class="services-accordion" data-services-accordion>
+      {services.map((service, index) => (
+        <details class="service-panel" name="nursery-services" open={index === 0}>
+          <summary>
+            <span class="service-number">{String(index + 1).padStart(2, '0')}</span>
+            <span class="service-plus" aria-hidden="true">+</span>
+            <span class="service-tab-title">{service.title}</span>
+            <img class="service-tab-photo" src={service.image} alt="" width="640" height="960" loading="lazy" decoding="async" />
+          </summary>
+          <div class="service-content">
+            <img src={service.image} alt="" width="800" height="960" loading="lazy" decoding="async" />
+            <div class="service-content-copy"><h3>{service.title}</h3><p>{service.description}</p><a href={service.link}>{service.action}</a></div>
+          </div>
+        </details>
+      ))}
+    </div>
+    <button class="services-control" type="button" data-services-control hidden>Pause rotation</button>
+    <div class="service-cards">
+      {services.map((service, index) => (
+        <article class="service-card" style={`--stack-order: ${index}`}>
+          <img src={service.image} alt="" width="640" height="960" loading="lazy" decoding="async" />
+          <div><h3>{service.title}</h3><p>{service.description}</p><a href={service.link}>{service.action}</a></div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  const accordion = document.querySelector<HTMLElement>('[data-services-accordion]');
+  const control = document.querySelector<HTMLButtonElement>('[data-services-control]');
+  const panels = Array.from(document.querySelectorAll<HTMLDetailsElement>('.service-panel'));
+  const motion = window.matchMedia('(min-width: 841px) and (prefers-reduced-motion: no-preference)');
+
+  if (accordion && control && panels.length) {
+    let visible = false;
+    let paused = false;
+    let interacting = false;
+    let timer = 0;
+
+    const select = (index: number) => panels.forEach((panel, i) => { panel.open = i === index; });
+    const updateRotation = () => {
+      window.clearInterval(timer);
+      control.hidden = !motion.matches;
+      if (motion.matches && visible && !paused && !interacting && !document.hidden) {
+        timer = window.setInterval(() => {
+          const current = panels.findIndex((panel) => panel.open);
+          select((current + 1) % panels.length);
+        }, 5000);
+      }
+    };
+
+    panels.forEach((panel, index) => {
+      const summary = panel.querySelector('summary');
+      summary?.addEventListener('click', (event) => { event.preventDefault(); select(index); updateRotation(); });
+      summary?.addEventListener('pointerenter', (event) => { if (event.pointerType !== 'touch') select(index); });
+    });
+    accordion.addEventListener('pointerenter', () => { interacting = true; updateRotation(); });
+    accordion.addEventListener('pointerleave', () => { interacting = accordion.contains(document.activeElement); updateRotation(); });
+    accordion.addEventListener('focusin', () => { interacting = true; updateRotation(); });
+    accordion.addEventListener('focusout', (event) => { interacting = accordion.contains(event.relatedTarget as Node | null) || accordion.matches(':hover'); updateRotation(); });
+    control.addEventListener('click', () => {
+      paused = !paused;
+      control.textContent = paused ? 'Resume rotation' : 'Pause rotation';
+      updateRotation();
+    });
+    new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; updateRotation(); }, { threshold: 0.2 }).observe(accordion);
+    motion.addEventListener('change', updateRotation);
+    document.addEventListener('visibilitychange', updateRotation);
+    updateRotation();
+  }
+</script>

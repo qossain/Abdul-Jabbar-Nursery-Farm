@@ -1,0 +1,60 @@
+---
+interface Props {
+  home?: boolean;
+}
+
+const { home = false } = Astro.props;
+const links = [
+  { label: 'Home', href: '/' },
+  { label: 'Plants', href: '/plants/' },
+  { label: 'Our story', href: '/#story' },
+  { label: 'Visit Pattoki', href: 'https://www.google.com/maps/place/Abdul+Jabbar+Nursery+Farm+%26+Landscaping+Pattoki+-+Indoor+Plants+%7C+Outdoor+Plants+%7C+Fruit+Plants/data=!4m2!3m1!1s0x0:0xa20910e728765781', external: true },
+  { label: 'Get in touch', href: 'https://wa.me/923126047941', external: true, contact: true },
+];
+---
+
+<header class={home ? 'site-header home-header' : 'site-header'}>
+  <a class="brand" href="/" aria-label="Abdul Jabbar Nursery Farm home">
+    <img src="/logo.webp" alt="" width="44" height="44" />
+    <span>ABDUL JABBAR<small>Nursery Farm and Landscaping</small></span>
+  </a>
+  <nav class="site-nav" aria-label="Main navigation">
+    {links.map((link) => <a class={link.contact ? 'nav-contact' : undefined} href={link.href} target={link.external ? '_blank' : undefined} rel={link.external ? 'noreferrer' : undefined}>{link.label}</a>)}
+  </nav>
+  <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="mobile-nav" data-menu-toggle>
+    <span class="dot-matrix" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+  </button>
+</header>
+
+<dialog class="mobile-nav" id="mobile-nav" aria-label="Navigation" data-mobile-nav>
+  <div class="mobile-nav-top">
+    <span class="mobile-nav-brand"><img src="/logo.webp" alt="" width="42" height="42" /> Abdul Jabbar</span>
+    <button class="mobile-nav-close" type="button" aria-label="Close navigation" data-menu-close><span aria-hidden="true">×</span></button>
+  </div>
+  <nav class="mobile-nav-links" aria-label="Mobile navigation">
+    {links.map((link) => <a class={link.contact ? 'mobile-nav-contact' : undefined} href={link.href} target={link.external ? '_blank' : undefined} rel={link.external ? 'noreferrer' : undefined}>{link.label}</a>)}
+  </nav>
+</dialog>
+
+<script>
+  const menuButton = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const mobileNav = document.querySelector<HTMLDialogElement>('[data-mobile-nav]');
+  const closeButton = document.querySelector<HTMLButtonElement>('[data-menu-close]');
+
+  if (menuButton && mobileNav && closeButton) {
+    menuButton.addEventListener('click', () => {
+      mobileNav.showModal();
+      menuButton.setAttribute('aria-expanded', 'true');
+      document.body.classList.add('menu-open');
+    });
+    closeButton.addEventListener('click', () => mobileNav.close());
+    mobileNav.querySelectorAll('a').forEach((link) => link.addEventListener('click', () => mobileNav.close()));
+    mobileNav.addEventListener('close', () => {
+      menuButton.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('menu-open');
+    });
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 840 && mobileNav.open) mobileNav.close();
+    });
+  }
+</script>

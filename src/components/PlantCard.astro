@@ -1,0 +1,37 @@
+---
+import type { Plant } from '../data/catalog';
+import { categoryFor, priceLabel } from '../data/catalog';
+
+interface Props {
+  plant: Plant;
+  priority?: boolean;
+}
+
+const { plant, priority = false } = Astro.props;
+const category = categoryFor(plant.category);
+---
+
+<a class="plant-card" href={'/plant/' + plant.slug + '/'} data-plant-card data-name={plant.name.toLocaleLowerCase()} data-category={plant.category} data-price={plant.price}>
+  <span class="plant-card-image">
+    <img
+      src={plant.image}
+      srcset={`${plant.image.replace('/plant-images/', '/plant-images/optimized/')} 600w, ${plant.image} 840w`}
+      sizes="(max-width: 700px) 45vw, (max-width: 940px) 30vw, 25vw"
+      alt={(category?.title ?? 'Plant') + ' collection'}
+      width="840"
+      height="1260"
+      loading={priority ? 'eager' : 'lazy'}
+      decoding="async"
+    />
+    <span class="plant-card-mark">View</span>
+  </span>
+  <span class="plant-card-details">
+    <span>
+      <strong>{plant.name}</strong>
+      <span class="plant-card-category">{category?.title}</span>
+    </span>
+    <span class="plant-price">
+      <span>{priceLabel(plant.price)}</span>
+    </span>
+  </span>
+</a>

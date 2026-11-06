@@ -1,0 +1,95 @@
+---
+import { categories } from '../data/catalog';
+
+const initialSlide = Math.floor(categories.length / 2);
+---
+
+<section class="collections" id="collections" aria-labelledby="collections-title">
+  <div class="collections-heading section-wrap">
+    <h2 id="collections-title">Categories</h2>
+    <svg class="collection-divider" viewBox="0 0 300 24" aria-hidden="true">
+      <path d="M3 12h124m46 0h124M150 12c-9-2-13-7-14-10m14 10c8-2 13-7 14-10m-14 10c-8 2-12 6-14 9m14-9c7 2 12 6 14 9" />
+      <circle cx="3" cy="12" r="2" /><circle cx="297" cy="12" r="2" />
+    </svg>
+  </div>
+  <div class="carousel">
+    <div class="category-rail" data-category-rail aria-label="Plant collections">
+      {categories.map((category, index) => (
+        <a class="category-slide" data-category-slide data-offset={index - initialSlide} href={'/plants/' + category.slug + '/'}>
+          <span class="category-photo">
+            <img src={category.coverImage} srcset={`${category.coverImage.replace('/plant-images/', '/plant-images/optimized/')} 600w, ${category.coverImage} 840w`} sizes="(max-width: 700px) 55vw, 30vw" alt={category.title} width="840" height="1260" loading="lazy" decoding="async" />
+          </span>
+          <span class="category-card-copy"><strong>{category.title}</strong></span>
+        </a>
+      ))}
+    </div>
+    <div class="carousel-dots" role="group" aria-label="Category carousel controls">
+      {categories.map((category, index) => (
+        <button type="button" class="carousel-dot" aria-label={'Show ' + category.title} aria-current={index === initialSlide ? 'true' : 'false'} data-category-dot></button>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  const rail = document.querySelector<HTMLElement>('[data-category-rail]');
+  const slides = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-category-slide]'));
+  const dots = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-category-dot]'));
+  let activeIndex = Math.floor(slides.length / 2);
+
+  if (rail && slides.length && dots.length) {
+    const select = (index: number) => {
+      activeIndex = (index + slides.length) % slides.length;
+      slides.forEach((slide, slideIndex) => {
+        let offset = slideIndex - activeIndex;
+        if (offset > slides.length / 2) offset -= slides.length;
+        if (offset < -slides.length / 2) offset += slides.length;
+        slide.dataset.offset = String(offset);
+      });
+      dots.forEach ( (dot, dotIndex) => dot.setAttribute('aria-current', String(dotIndex === activeIndex)) );
+    };
+
+    slides.forEach((slide, index) => slide.addEventListener('click', (event) => {
+      if (index !== activeIndex) {
+        event.preventDefault();
+        select(index);
+      }
+    }));
+    dots.forEach((dot, index) => dot.addEventListener('click', () => select(index)));
+
+    let startX = 0;
+    let startY = 0;
+    let swiped = false;
+    rail.addEventListener('pointerdown', (event) => {
+      if (event.pointerType !== 'touch') return;
+      startX = event.clientX;
+      startY = event.clientY;
+      swiped = false;
+    });
+    rail.addEventListener('pointerup', (event) => {
+      if (event.pointerType !== 'touch') return;
+      const dx = event.clientX - startX;
+      if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(event.clientY - startY)) {
+        swiped = true;
+        select(activeIndex + (dx < 0 ? 1 : -1));
+      }
+    });
+    rail.addEventListener('click', (event) => {
+      if (swiped) {
+        event.preventDefault();
+        event.stopPropagation();
+        swiped = false;
+      }
+    }, true);
+
+    let lastWheel = 0;
+    rail.addEventListener('wheel', (event) => {
+      if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
+      event.preventDefault();
+      if (Date.now() - lastWheel > 500) {
+        select(activeIndex + (event.deltaX > 0 ? 1 : -1));
+        lastWheel = Date.now();
+      }
+    }, { passive: false });
+  }
+</script>
