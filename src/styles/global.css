@@ -97,22 +97,23 @@ button { color: inherit; }
 @keyframes hero-settle { from { transform: scale(1.045); } to { transform: scale(1); } }
 
 .section-wrap { width: min(1180px, calc(100% - 64px)); margin-right: auto; margin-left: auto; }
-.experience { padding: 54px 0 48px; text-align: center; background: #f8f2e6; }
+.experience { padding: 54px 0 48px; text-align: center; background: #faf6ed; }
+.experience-logo { width: 80px; height: 80px; margin: 0 auto 12px; border-radius: 50%; mix-blend-mode: multiply; }
 .experience-story h2, .section-heading h2, .landscape-copy h2, .page-heading h1 { margin: 0; font-family: var(--serif); font-size: clamp(38px, 4.7vw, 61px); font-weight: 500; letter-spacing: -.045em; line-height: 1.08; text-wrap: balance; }
-.experience-heading h2 { margin: 0; color: var(--forest); font-family: var(--serif); font-size: clamp(35px, 4vw, 52px); font-weight: 500; line-height: 1.05; }
+.experience-heading h2 { margin: 0; color: #102b1c; font-family: var(--serif); font-size: clamp(35px, 4vw, 52px); font-weight: 500; line-height: 1.05; }
 .experience-heading p { margin: 4px 0; color: var(--forest); font-family: var(--serif); font-size: clamp(18px, 2vw, 25px); font-style: italic; }
 .experience-heading > span { color: var(--forest); font-family: var(--serif); font-size: 15px; font-style: italic; }
 .experience-facts { display: grid; grid-template-columns: repeat(3, 1fr); margin: 32px auto 34px; }
 .experience-facts > div { display: flex; gap: 13px; align-items: center; justify-content: center; padding: 4px 18px; }
 .experience-facts > div + div { border-left: 1px solid rgba(179,154,104,.5); }
-.experience-facts svg { flex: 0 0 34px; width: 34px; height: 42px; fill: none; stroke: #b08a43; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.experience-facts svg { flex: 0 0 34px; width: 34px; height: 42px; fill: none; stroke: #90620e; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .experience-facts strong { color: var(--forest); font-family: var(--serif); font-size: clamp(19px, 1.9vw, 25px); font-weight: 500; line-height: 1.15; }
 .experience-facts small { display: block; margin-top: 4px; color: var(--muted); font-family: var(--sans); font-size: 9px; font-weight: 400; }
 .recognition-heading h3 { margin: 0; color: var(--forest); font-family: var(--serif); font-size: clamp(27px, 2.7vw, 36px); font-weight: 500; }
 .recognition-heading p { max-width: 510px; margin: 7px auto 18px; color: var(--muted); font-size: 11px; line-height: 1.5; }
 .award-list { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; }
 .award { display: grid; justify-items: center; align-content: start; gap: 8px; min-width: 0; padding: 4px; border: 0; background: transparent; cursor: pointer; }
-.award-medallion { position: relative; display: grid; width: min(100%, 148px); aspect-ratio: 1; place-items: center; border-radius: 50%; color: #dfbf79; background: #172b1e; transition: transform .35s ease, box-shadow .35s ease; }
+.award-medallion { position: relative; display: grid; width: min(100%, 148px); aspect-ratio: 1; place-items: center; border-radius: 50%; color: #f2d28c; background: #102b1c; transition: transform .35s ease, box-shadow .35s ease; }
 .award-laurel { position: absolute; inset: 4%; width: 92%; height: 92%; }
 .award-symbol { position: relative; width: 40%; height: 40%; }
 .award-name { color: var(--forest); font-family: var(--serif); font-size: 17px; line-height: 1.25; opacity: 0; transform: translateY(7px); transition: opacity .3s ease, transform .3s ease; }
@@ -349,10 +350,10 @@ button { color: inherit; }
   .service-card img { width: 100%; height: 170px; object-fit: cover; }
   .service-card > div { padding: 18px; }
   .service-card h3 { font-size: 21px; }
-  .site-header { grid-template-columns: minmax(0, 1fr) auto; min-height: 50px; padding: 4px 6px 4px 11px; }
+  .site-header { grid-template-columns: minmax(0, 1fr) auto; column-gap: 12px; min-height: 50px; padding: 4px 6px 4px 11px; }
   .brand { min-width: 0; gap: 7px; font-size: 11px; }
   .site-header .brand img { width: 34px; height: 34px; }
-  .brand small { display: none; }
+  .site-header .brand small { display: block; margin-top: 3px; color: #173d2d; font-size: 9px; font-weight: 600; letter-spacing: .02em; white-space: nowrap; }
   .menu-toggle { grid-column: 2; display: flex; align-items: center; justify-content: center; }
   .site-nav { display: none; }
   body.menu-open { overflow: hidden; }
@@ -374,7 +375,6 @@ button { color: inherit; }
   .home-header { top: 14px; margin: 0; }
   .brand { min-width: 0; gap: 7px; font-size: 11px; }
   .site-header .brand img { width: 34px; height: 34px; }
-  .brand small { display: none; }
   .menu-toggle { display: flex; align-items: center; justify-content: center; margin-left: auto; }
   .hero { min-height: 710px; height: 94svh; max-height: 940px; }
   .hero-visual img { object-position: 57% center; }
@@ -388,6 +388,7 @@ button { color: inherit; }
   .hero-secondary { min-height: 48px; padding: 0 17px; font-size: 10px; }
   .section-wrap { width: calc(100% - 36px); }
   .experience { padding: 30px 0 28px; }
+  .experience-logo { width: 64px; height: 64px; margin-bottom: 9px; }
   .experience-story h2, .section-heading h2, .landscape-copy h2, .page-heading h1 { font-size: clamp(37px, 10vw, 51px); }
   .experience-heading h2 { font-size: 35px; }
   .experience-heading p { font-size: 17px; }
