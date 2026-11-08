@@ -31,7 +31,7 @@ const category = categoryFor(plant.category);
       <span class="plant-card-category">{category?.title}</span>
     </span>
     <span class="plant-price">
-      <span>{priceLabel(plant.price, plant.maxPrice)}</span>
+      <span>{plant.estimatedPrice ? 'Est. ' : ''}{priceLabel(plant.price, plant.maxPrice)}</span>
     </span>
   </span>
 </a>

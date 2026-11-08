@@ -15,6 +15,8 @@ export type Plant = {
   price: number;
   maxPrice?: number;
   hideExampleActivity?: boolean;
+  estimatedPrice?: boolean;
+  originalImage?: string;
 };
 
 const numberedImages = (prefix: string, count: number, digits = 2) =>
@@ -162,8 +164,37 @@ const nurseryTrees: Plant[] = ([
   price: 200, maxPrice: 5000, hideExampleActivity: true,
 }));
 
+// Estimated from comparable Pakistani nursery listings, not confirmed nursery prices.
+const clientPlants: Plant[] = ([
+  ['Grafted Kinnow', 'fruit-kinnow-mandarin', 'kinnow', 1500],
+  ['Grafted Citrus Varieties', 'fruit-grafted-citrus', 'citrus', 1500],
+  ['Pineapple', 'fruit-pineapple', 'pineapple', 1200],
+  ['Grafted China Lemon', 'fruit-china-lemon', 'china-lemon', 1500],
+  ['Grafted Loquat', 'fruit-loquat', 'loquat', 1100],
+  ['Avocado', 'fruit-avocado', 'avocado', 1200],
+  ['Jackfruit', 'fruit-jackfruit', 'jackfruit', 1500],
+  ['Sensation Jumbo Mango', 'fruit-sensation-jumbo-mango', 'sensation-jumbo-mango', 950],
+  ['Florida King Peach', 'fruit-florida-king-peach', 'florida-king-peach', 950],
+  ['Grafted Badami Plum', 'fruit-badami-plum', 'badami-plum', 950],
+  ['Apricot and Plum', 'fruit-apricot-plum', 'apricot-plum', 950],
+  ['Grafted Anna Apple', 'fruit-anna-apple', 'anna-apple', 950],
+  ['Japanese Persimmon', 'fruit-persimmon', 'persimmon', 950],
+  ['Black and White Fig', 'fruit-fig', 'fig', 950],
+  ['Green Rose Apple', 'fruit-green-rose-apple', 'green-rose-apple', 7999],
+  ['Gola and Surahi Lychee', 'fruit-lychee', 'lychee', 1200],
+  ['Persian Lemon', 'fruit-persian-lemon', 'persian-lemon', 1500],
+  ['Early Grand Peach', 'fruit-early-grand-peach', 'early-grand-peach', 950],
+  ['Gul e Nishtar', 'trees-gul-e-nishtar', 'gul-e-nishtar', 350],
+  ['Pine Tree', 'trees-pine', 'pine', 3570],
+] as [string, string, string, number][]).map(([name, slug, photo, price]) => ({
+  name, slug, category: slug.startsWith('trees-') ? 'trees' : 'fruit',
+  image: `/plant-images/client-enhanced-${photo}.webp`,
+  originalImage: `/plant-images/client-original-${photo}.webp`,
+  price, estimatedPrice: true, hideExampleActivity: true,
+}));
+
 export const plants: Plant[] = categories.flatMap((category) => {
-  if (category.slug === 'trees') return nurseryTrees;
+  if (category.slug === 'trees') return [...clientPlants.filter((plant) => plant.category === 'trees'), ...nurseryTrees];
   const collection = names[category.slug];
   if (!collection || collection.length !== 30) throw new Error(`The ${category.slug} collection must contain 30 listings.`);
   const generated = collection.map((name, index) => ({
@@ -173,9 +204,8 @@ export const plants: Plant[] = categories.flatMap((category) => {
     image: category.images[index % category.images.length],
     price: category.basePrice + ((index * 347) % (category.basePrice * 3)),
   }));
-  return category.slug === 'palms'
-    ? [...nurseryPalms, ...generated.filter((plant) => !nurseryPalms.some((palm) => palm.slug === plant.slug))]
-    : generated;
+  const supplied = category.slug === 'palms' ? nurseryPalms : clientPlants.filter((plant) => plant.category === category.slug);
+  return [...supplied, ...generated.filter((plant) => !supplied.some((item) => item.slug === plant.slug))];
 });
 
 export const categoryFor = (slug: string) => categories.find((category) => category.slug === slug);

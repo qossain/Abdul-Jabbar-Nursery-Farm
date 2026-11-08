@@ -19,17 +19,28 @@ const activityPeriod = ['hour', '2 hours', '5 hours', '8 hours', '12 hours', '20
 
 <BaseLayout title={`${plant.name} | Abdul Jabbar Nursery Farm`} description={`Explore ${plant.name} from Abdul Jabbar Nursery Farm in Pattoki.`}>
   <main id="main" class="section-wrap">
-    <div class="product-page">
-      <div class="product-image">
+    <div class:list={['product-page', { 'has-gallery': plant.originalImage }]}>
+      <div class:list={['product-image', { 'has-original': plant.originalImage }]}>
+        <div class="product-gallery-track" data-gallery-track tabindex={plant.originalImage ? '0' : undefined} role={plant.originalImage ? 'region' : undefined} aria-label={plant.originalImage ? `Photos of ${plant.name}` : undefined}>
         <picture>
           <source media="(max-width: 700px)" srcset={plant.image.replace('/plant-images/', '/plant-images/optimized/')} />
           <img src={plant.image} alt={plant.name} width="840" height="1260" fetchpriority="high" decoding="async" />
         </picture>
+        {plant.originalImage && <picture>
+          <source media="(max-width: 700px)" srcset={plant.originalImage.replace('/plant-images/', '/plant-images/optimized/')} />
+          <img src={plant.originalImage} alt={`Original photo of ${plant.name}`} width="840" height="1260" loading="lazy" decoding="async" />
+        </picture>}
+        </div>
+        {plant.originalImage && <div class="product-gallery-controls" role="group" aria-label="Choose a photo">
+          <button type="button" data-gallery-page="0" aria-label="Show first photo" aria-pressed="true"></button>
+          <button type="button" data-gallery-page="1" aria-label="Show second photo" aria-pressed="false"></button>
+        </div>}
       </div>
       <article class="product-info">
         <a class="product-category" href={`/plants/${category.slug}/`}>{category.title}</a>
         <h1>{plant.name}</h1>
-        <p class="product-price">{priceLabel(plant.price, plant.maxPrice)}</p>
+        <p class="product-price">{plant.estimatedPrice ? 'Est. ' : ''}{priceLabel(plant.price, plant.maxPrice)}</p>
+        {plant.estimatedPrice && <p>Contact the nursery to confirm the current price.</p>}
         {!plant.hideExampleActivity && <p class="product-availability">{activityCount} sold in the last {activityPeriod}</p>}
         <div class="product-actions">
           <a class="button button-dark" href={`https://wa.me/923126047941?text=${message}`} target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.6a8.5 8.5 0 0 1-12.7 7.4L3 20.5l1.5-4.6a8.5 8.5 0 1 1 16-4.3Z"/><path d="M8.5 7.8c.3-.5.6-.5.9-.5h.4l1 2.2-.7.8c.6 1.3 1.6 2.3 2.9 2.9l.8-.7 2.2 1v.4c0 .4-.1.7-.5 1-1.1.7-2.8 0-4.7-1.9S7.8 8.9 8.5 7.8Z"/></svg><span>Ask about this plant</span></a>
@@ -48,3 +59,17 @@ const activityPeriod = ['hour', '2 hours', '5 hours', '8 hours', '12 hours', '20
     </section>
   </main>
 </BaseLayout>
+
+<script>
+  const track = document.querySelector<HTMLElement>('[data-gallery-track]');
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-gallery-page]'));
+  if (track && buttons.length) {
+    buttons.forEach((button, index) => button.addEventListener('click', () => {
+      track.scrollTo({ left: index * track.clientWidth, behavior: 'auto' });
+    }));
+    track.addEventListener('scroll', () => {
+      const active = Math.round(track.scrollLeft / track.clientWidth);
+      buttons.forEach((button, index) => button.setAttribute('aria-pressed', String(index === active)));
+    }, { passive: true });
+  }
+</script>
