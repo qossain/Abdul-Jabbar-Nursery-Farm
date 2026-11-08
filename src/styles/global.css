@@ -140,6 +140,7 @@ button { color: inherit; }
 .category-slide[data-offset="1"] { left: calc(50% + min(19%, 270px)); }
 .category-slide[data-offset="2"] { left: calc(50% + min(32%, 450px)); }
 .category-slide[data-offset="3"] { left: calc(50% + min(44%, 620px)); }
+.category-slide[data-offset="-4"], .category-slide[data-offset="4"] { visibility: hidden; pointer-events: none; }
 .category-slide[data-offset="-2"], .category-slide[data-offset="2"] { width: min(148px, 10.5vw); height: 232px; }
 .category-slide[data-offset="-1"], .category-slide[data-offset="1"] { width: min(190px, 13.5vw); height: 280px; }
 .category-slide[data-offset="0"] { z-index: 1; width: min(335px, 23.7vw); height: 484px; }

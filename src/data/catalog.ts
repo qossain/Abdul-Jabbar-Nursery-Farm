@@ -13,6 +13,7 @@ export type Plant = {
   category: string;
   image: string;
   price: number;
+  maxPrice?: number;
   hideExampleActivity?: boolean;
 };
 
@@ -64,6 +65,11 @@ export const categories: Category[] = [
     slug: 'palms', title: 'Palms', basePrice: 2200,
     images: localImages(...namedImages('palms-', 'areca-palm', 'date-palm', 'foxtail-palm', 'bottle-palm', 'fan-palm', 'lady-palm', 'sago-palm', 'parlour-palm', 'majesty-palm', 'coconut-palm-sapling')),
     coverImage: '', description: 'Architectural palms for entranceways, terraces and larger gardens.',
+  },
+  {
+    slug: 'trees', title: 'Trees', basePrice: 200,
+    images: localImages('nursery-terminalia.webp'),
+    coverImage: '', description: 'Trees for gardens, avenues and landscape projects.',
   },
 ];
 
@@ -143,7 +149,21 @@ const nurseryPalms: Plant[] = ([
   image: `/plant-images/nursery-${slug}.webp`, price, hideExampleActivity: true,
 }));
 
+// Species for the sixth tree remains unconfirmed; images are AI edited from client photos.
+const nurseryTrees: Plant[] = ([
+  ['Terminalia', 'terminalia'],
+  ['China Doll', 'china-doll'],
+  ['Jamun Fruit Tree', 'jamun'],
+  ['Amstel King Ficus', 'amstel-king-ficus'],
+  ['Pink Tabebuia', 'pink-tabebuia'],
+  ['Nursery Tree', 'tree-six'],
+] as [string, string][]).map(([name, slug]) => ({
+  name, slug: `trees-${slug}`, category: 'trees', image: `/plant-images/nursery-${slug}.webp`,
+  price: 200, maxPrice: 5000, hideExampleActivity: true,
+}));
+
 export const plants: Plant[] = categories.flatMap((category) => {
+  if (category.slug === 'trees') return nurseryTrees;
   const collection = names[category.slug];
   if (!collection || collection.length !== 30) throw new Error(`The ${category.slug} collection must contain 30 listings.`);
   const generated = collection.map((name, index) => ({
@@ -160,4 +180,4 @@ export const plants: Plant[] = categories.flatMap((category) => {
 
 export const categoryFor = (slug: string) => categories.find((category) => category.slug === slug);
 export const plantsFor = (slug: string) => plants.filter((plant) => plant.category === slug);
-export const priceLabel = (amount: number) => 'Rs ' + new Intl.NumberFormat('en-PK').format(amount);
+export const priceLabel = (amount: number, maxPrice?: number) => 'Rs ' + new Intl.NumberFormat('en-PK').format(amount) + (maxPrice ? ' to Rs ' + new Intl.NumberFormat('en-PK').format(maxPrice) : '');

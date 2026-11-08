@@ -12,14 +12,15 @@ export function getStaticPaths() {
 
 const { category } = Astro.props;
 const listings = plantsFor(category.slug);
+const hero = category.slug === 'trees' ? 'outdoor' : category.slug;
 ---
 
 <BaseLayout title={`${category.title} | Abdul Jabbar Nursery Farm`} description={`Explore ${category.title.toLowerCase()} at Abdul Jabbar Nursery Farm in Pattoki.`}>
   <main id="main">
     <header class="category-hero">
       <picture class="category-hero-image">
-        <source media="(max-width: 700px)" srcset={`/category-heroes/${category.slug}-mobile.webp`} />
-        <img src={`/category-heroes/${category.slug}-desktop.webp`} width="840" height="520" alt="" fetchpriority="high" decoding="async" />
+        <source media="(max-width: 700px)" srcset={`/category-heroes/${hero}-mobile.webp`} />
+        <img src={`/category-heroes/${hero}-desktop.webp`} width="840" height="520" alt="" fetchpriority="high" decoding="async" />
       </picture>
       <div class="category-hero-copy">
         <p>Plant collection</p>
