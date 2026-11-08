@@ -13,6 +13,7 @@ export type Plant = {
   category: string;
   image: string;
   price: number;
+  hideExampleActivity?: boolean;
 };
 
 const numberedImages = (prefix: string, count: number, digits = 2) =>
@@ -129,16 +130,32 @@ const names: Record<string, string[]> = {
   ],
 };
 
+// Client-supplied prices and AI-edited reference photos; confirm availability before launch.
+const nurseryPalms: Plant[] = ([
+  ['Royal Palm', 'royal-palm', 15000],
+  ['Copernicia Alba Palm', 'copernicia-alba-palm', 40000],
+  ['Sylvester Palm', 'sylvester-palm', 60000],
+  ['Kangi Palm', 'kangi-palm', 5000],
+  ['Ponytail Palm', 'ponytail-palm', 5000],
+  ['Alexandra Palm', 'alexandra-palm', 5000],
+] as [string, string, number][]).map(([name, slug, price]) => ({
+  name, slug: `palms-${slug}`, category: 'palms',
+  image: `/plant-images/nursery-${slug}.webp`, price, hideExampleActivity: true,
+}));
+
 export const plants: Plant[] = categories.flatMap((category) => {
   const collection = names[category.slug];
   if (!collection || collection.length !== 30) throw new Error(`The ${category.slug} collection must contain 30 listings.`);
-  return collection.map((name, index) => ({
+  const generated = collection.map((name, index) => ({
     slug: `${category.slug}-${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}`,
     name,
     category: category.slug,
     image: category.images[index % category.images.length],
     price: category.basePrice + ((index * 347) % (category.basePrice * 3)),
   }));
+  return category.slug === 'palms'
+    ? [...nurseryPalms, ...generated.filter((plant) => !nurseryPalms.some((palm) => palm.slug === plant.slug))]
+    : generated;
 });
 
 export const categoryFor = (slug: string) => categories.find((category) => category.slug === slug);

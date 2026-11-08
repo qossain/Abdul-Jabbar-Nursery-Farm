@@ -23,14 +23,14 @@ const activityPeriod = ['hour', '2 hours', '5 hours', '8 hours', '12 hours', '20
       <div class="product-image">
         <picture>
           <source media="(max-width: 700px)" srcset={plant.image.replace('/plant-images/', '/plant-images/optimized/')} />
-          <img src={plant.image} alt={`${category.title} collection`} width="840" height="1260" fetchpriority="high" decoding="async" />
+          <img src={plant.image} alt={plant.name} width="840" height="1260" fetchpriority="high" decoding="async" />
         </picture>
       </div>
       <article class="product-info">
         <a class="product-category" href={`/plants/${category.slug}/`}>{category.title}</a>
         <h1>{plant.name}</h1>
         <p class="product-price">{priceLabel(plant.price)}</p>
-        <p class="product-availability">{activityCount} sold in the last {activityPeriod}</p>
+        {!plant.hideExampleActivity && <p class="product-availability">{activityCount} sold in the last {activityPeriod}</p>}
         <div class="product-actions">
           <a class="button button-dark" href={`https://wa.me/923126047941?text=${message}`} target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.6a8.5 8.5 0 0 1-12.7 7.4L3 20.5l1.5-4.6a8.5 8.5 0 1 1 16-4.3Z"/><path d="M8.5 7.8c.3-.5.6-.5.9-.5h.4l1 2.2-.7.8c.6 1.3 1.6 2.3 2.9 2.9l.8-.7 2.2 1v.4c0 .4-.1.7-.5 1-1.1.7-2.8 0-4.7-1.9S7.8 8.9 8.5 7.8Z"/></svg><span>Ask about this plant</span></a>
           <a class="button product-call" href="tel:+923126047941"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v2.8a2 2 0 0 1-2.2 2A19.7 19.7 0 0 1 2.3 4.2a2 2 0 0 1 2-2.2h2.8a2 2 0 0 1 2 1.7l.4 2.6a2 2 0 0 1-.6 1.8L7.7 9.3a16 16 0 0 0 7 7l1.2-1.2a2 2 0 0 1 1.8-.6l2.6.4a2 2 0 0 1 1.7 2Z"/></svg><span>Call the nursery</span></a>
