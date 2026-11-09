@@ -31,7 +31,8 @@ const category = categoryFor(plant.category);
       <span class="plant-card-category">{category?.title}</span>
     </span>
     <span class="plant-price">
-      <span>{plant.estimatedPrice ? 'Est. ' : ''}{priceLabel(plant.price, plant.maxPrice)}</span>
+      <span>{plant.price == null ? 'Ask for price' : `${plant.estimatedPrice ? 'Est. ' : ''}${priceLabel(plant.price, plant.maxPrice)}`}</span>
+      {plant.photoVariants && <small>Other sizes available</small>}
     </span>
   </span>
 </a>

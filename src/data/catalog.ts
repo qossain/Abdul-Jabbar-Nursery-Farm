@@ -12,11 +12,15 @@ export type Plant = {
   name: string;
   category: string;
   image: string;
-  price: number;
+  price?: number;
   maxPrice?: number;
   hideExampleActivity?: boolean;
   estimatedPrice?: boolean;
   originalImage?: string;
+  additionalImages?: string[];
+  photoVariants?: { image: string; detail: string; price?: number }[];
+  detail?: string;
+  example?: boolean;
 };
 
 const numberedImages = (prefix: string, count: number, digits = 2) =>
@@ -39,7 +43,6 @@ export const categories: Category[] = [
     images: localImages(
       ...namedImages('outdoor-', 'bougainvillea', 'hibiscus-shrub', 'jasmine-shrub', 'gardenia-shrub', 'oleander-shrub', 'ixora-flowering-shrub', 'lantana-plant', 'ficus-benjamina', 'duranta-golden-shrub', 'croton-shrub'),
       ...namedImages('trees-', 'neem-tree', 'amaltas-golden-shower-tree', 'jacaranda-tree', 'gulmohar-flamboyant-tree', 'banyan-sapling', 'moringa-tree', 'ficus-tree', 'jamun-tree', 'peepal-tree', 'bottlebrush-tree'),
-      ...namedImages('topiary-', 'deer-shaped-living-topiary', 'giraffe-shaped-living-topiary', 'elephant-shaped-living-topiary', 'peacock-shaped-living-topiary', 'rabbit-shaped-living-topiary', 'swan-shaped-living-topiary', 'spiral-topiary', 'cone-shaped-topiary', 'ball-shaped-topiary', 'tiered-cloud-shaped-topiary'),
     ),
     coverImage: '', description: 'Trees, shrubs and sculptural greenery for gardens and open air settings.',
   },
@@ -73,10 +76,15 @@ export const categories: Category[] = [
     images: localImages('nursery-terminalia.webp'),
     coverImage: '', description: 'Trees for gardens, avenues and landscape projects.',
   },
+  {
+    slug: 'topiary', title: 'Topiary art', basePrice: 0,
+    images: localImages('topiary-enhanced-swan-pair.webp'),
+    coverImage: '', description: 'Shaped plants and living sculptures for gardens and landscape projects.',
+  },
 ];
 
 categories.forEach((category) => {
-  category.coverImage = category.images[category.slug === 'outdoor' ? 20 : category.slug === 'cactus' ? 5 : 0];
+  category.coverImage = category.images[category.slug === 'outdoor' ? 7 : category.slug === 'cactus' ? 5 : 0];
 });
 
 const names: Record<string, string[]> = {
@@ -139,6 +147,39 @@ const names: Record<string, string[]> = {
 };
 
 // Client-supplied prices and AI-edited reference photos; confirm availability before launch.
+const topiaryPlants: Plant[] = ([
+  ['Teddy Bear Topiary Large', 'bear', 60000, []],
+  ['Swan Topiary Pair', 'swan-pair', 3000, ['swan-pair-b']],
+  ['Football Topiary', 'football-15', 2500, []],
+  ['Buxus Surahi', 'surahi-4ft', 4000, []],
+  ['Small Elephant Topiary', 'elephant-small', 35000, []],
+  ['Buxus Cone 8 feet', 'cone', 10000, []],
+  ['Buxus Spiral 6 feet', 'spiral', 9000, []],
+  ['Giraffe Topiary Medium', 'giraffe', 90000, []],
+  ['Elephant Topiary', 'elephant-large', undefined, []],
+] as [string, string, number | undefined, string[]][]).map(([name, photo, price, extra]) => ({
+  name, slug: `topiary-${photo}`, category: 'topiary', price,
+  image: `/plant-images/topiary-enhanced-${photo}.webp`, originalImage: `/plant-images/topiary-original-${photo}.webp`,
+  detail: photo === 'spiral' ? '15 inch pot, 6 feet tall' : photo === 'surahi-4ft' ? '15 inch pot, 4 feet tall' : photo === 'cone' ? '24 inch pot, 8 feet tall' : undefined,
+  additionalImages: extra.flatMap((item) => [`/plant-images/topiary-enhanced-${item}.webp`, `/plant-images/topiary-original-${item}.webp`]),
+  ...(photo === 'surahi-4ft' ? { photoVariants: [
+    { image: '/plant-images/topiary-enhanced-surahi-4ft.webp', detail: '15 inch pot, 4 feet tall', price: 4000 },
+    { image: '/plant-images/topiary-original-surahi-4ft.webp', detail: '15 inch pot, 4 feet tall', price: 4000 },
+    { image: '/plant-images/topiary-enhanced-surahi-24-b.webp', detail: '24 inch pot', price: 10000 },
+    { image: '/plant-images/topiary-original-surahi-24-b.webp', detail: '24 inch pot', price: 10000 },
+    { image: '/plant-images/topiary-enhanced-surahi-24-art.webp', detail: '24 inch pot, 6 feet tall', price: 12000 },
+    { image: '/plant-images/topiary-original-surahi-24-art.webp', detail: '24 inch pot, 6 feet tall', price: 12000 },
+    { image: '/plant-images/topiary-enhanced-surahi-24-a.webp', detail: 'Size to be confirmed' },
+    { image: '/plant-images/topiary-original-surahi-24-a.webp', detail: 'Size to be confirmed' },
+  ] } : photo === 'football-15' ? { photoVariants: [
+    { image: '/plant-images/topiary-enhanced-football-15.webp', detail: '15 inch pot', price: 2500 },
+    { image: '/plant-images/topiary-original-football-15.webp', detail: '15 inch pot', price: 2500 },
+    { image: '/plant-images/topiary-enhanced-football-24-art.webp', detail: '24 inch size' },
+    { image: '/plant-images/topiary-original-football-24-art.webp', detail: '24 inch size' },
+  ] } : {}),
+  hideExampleActivity: true,
+}));
+
 const nurseryPalms: Plant[] = ([
   ['Royal Palm', 'royal-palm', 15000],
   ['Copernicia Alba Palm', 'copernicia-alba-palm', 40000],
@@ -194,6 +235,7 @@ const clientPlants: Plant[] = ([
 }));
 
 export const plants: Plant[] = categories.flatMap((category) => {
+  if (category.slug === 'topiary') return topiaryPlants;
   if (category.slug === 'trees') return [...clientPlants.filter((plant) => plant.category === 'trees'), ...nurseryTrees];
   const collection = names[category.slug];
   if (!collection || collection.length !== 30) throw new Error(`The ${category.slug} collection must contain 30 listings.`);
@@ -202,7 +244,7 @@ export const plants: Plant[] = categories.flatMap((category) => {
     name,
     category: category.slug,
     image: category.images[index % category.images.length],
-    price: category.basePrice + ((index * 347) % (category.basePrice * 3)),
+    example: true,
   }));
   const supplied = category.slug === 'palms' ? nurseryPalms : clientPlants.filter((plant) => plant.category === category.slug);
   return [...supplied, ...generated.filter((plant) => !supplied.some((item) => item.slug === plant.slug))];

@@ -65,6 +65,8 @@ const { plants, filterCategories = false } = Astro.props;
       const order = sort.value;
       matches.sort((first, second) => order === 'featured'
         ? cards.indexOf(first) - cards.indexOf(second)
+        : !first.dataset.price ? (!second.dataset.price ? 0 : 1)
+        : !second.dataset.price ? -1
         : order === 'low'
           ? Number(first.dataset.price) - Number(second.dataset.price)
           : Number(second.dataset.price) - Number(first.dataset.price));
