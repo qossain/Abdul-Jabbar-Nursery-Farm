@@ -22,6 +22,10 @@ const business = {
   address: { '@type': 'PostalAddress', addressLocality: 'Pattoki', addressRegion: 'Punjab', addressCountry: 'PK' },
   sameAs: ['https://www.instagram.com/abduljabbarnurseryfarm/', 'https://www.facebook.com/abduljabbarnurseryfarm/'],
 };
+const website = {
+  '@context': 'https://schema.org', '@type': 'WebSite',
+  name: 'Abdul Jabbar Nursery Farm', alternateName: 'Abdul Jabbar Nursery', url: Astro.site?.href,
+};
 ---
 
 <!doctype html>
@@ -42,6 +46,7 @@ const business = {
     <meta property="og:image" content={shareImage} />
     <meta name="twitter:card" content="summary_large_image" />
     {home && <script type="application/ld+json" set:html={JSON.stringify(business)} />}
+    {home && <script type="application/ld+json" set:html={JSON.stringify(website)} />}
     <title>{title}</title>
     {home && <link rel="preload" as="image" href={heroPhoto} media="(min-width: 701px)" fetchpriority="high" />}
     {home && <link rel="preload" as="image" href={heroPhotoMobile} media="(max-width: 700px)" fetchpriority="high" />}

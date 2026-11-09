@@ -111,7 +111,7 @@ button { color: inherit; }
 .experience-facts small { display: block; margin-top: 4px; color: var(--muted); font-family: var(--sans); font-size: 9px; font-weight: 400; }
 .recognition-heading h3 { margin: 0; color: var(--forest); font-family: var(--serif); font-size: clamp(27px, 2.7vw, 36px); font-weight: 500; }
 .recognition-heading p { max-width: 510px; margin: 7px auto 18px; color: var(--muted); font-size: 11px; line-height: 1.5; }
-.award-list { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; }
+.award-list { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin-top: 20px; }
 .award { display: grid; justify-items: center; align-content: start; gap: 8px; min-width: 0; padding: 4px; border: 0; background: transparent; cursor: pointer; }
 .award-medallion { position: relative; display: grid; width: min(100%, 148px); aspect-ratio: 1; place-items: center; border-radius: 50%; color: #f2d28c; background: #102b1c; transition: transform .35s ease, box-shadow .35s ease; }
 .award-laurel { position: absolute; inset: 4%; width: 92%; height: 92%; }
