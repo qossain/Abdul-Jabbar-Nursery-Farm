@@ -50,7 +50,7 @@ const initialSlide = Math.floor(categories.length / 2);
     };
 
     slides.forEach((slide, index) => slide.addEventListener('click', (event) => {
-      if (index !== activeIndex) {
+      if (!matchMedia('(max-width: 700px)').matches && index !== activeIndex) {
         event.preventDefault();
         select(index);
       }
@@ -61,13 +61,13 @@ const initialSlide = Math.floor(categories.length / 2);
     let startY = 0;
     let swiped = false;
     rail.addEventListener('pointerdown', (event) => {
-      if (event.pointerType !== 'touch') return;
+      if (event.pointerType !== 'touch' || matchMedia('(max-width: 700px)').matches) return;
       startX = event.clientX;
       startY = event.clientY;
       swiped = false;
     });
     rail.addEventListener('pointerup', (event) => {
-      if (event.pointerType !== 'touch') return;
+      if (event.pointerType !== 'touch' || matchMedia('(max-width: 700px)').matches) return;
       const dx = event.clientX - startX;
       if (Math.abs(dx) > 35 && Math.abs(dx) > Math.abs(event.clientY - startY)) {
         swiped = true;
@@ -75,7 +75,7 @@ const initialSlide = Math.floor(categories.length / 2);
       }
     });
     rail.addEventListener('click', (event) => {
-      if (swiped) {
+      if (swiped && !matchMedia('(max-width: 700px)').matches) {
         event.preventDefault();
         event.stopPropagation();
         swiped = false;
@@ -84,7 +84,7 @@ const initialSlide = Math.floor(categories.length / 2);
 
     let lastWheel = 0;
     rail.addEventListener('wheel', (event) => {
-      if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
+      if (matchMedia('(max-width: 700px)').matches || Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
       event.preventDefault();
       if (Date.now() - lastWheel > 500) {
         select(activeIndex + (event.deltaX > 0 ? 1 : -1));

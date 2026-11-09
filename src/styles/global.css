@@ -421,24 +421,12 @@ button { color: inherit; }
   .collections-heading h2 { font-size: clamp(32px, 8vw, 43px); }
   .collection-divider { margin-top: 13px; }
   .carousel { margin: 0; }
-  .category-rail { width: 100%; height: min(438px, 115vw); }
-  .category-slide { width: 5.5vw; height: 178px; }
-  .category-slide[data-offset="-3"] { left: 5%; }
-  .category-slide[data-offset="-2"] { left: 11.5%; }
-  .category-slide[data-offset="-1"] { left: 19%; }
-  .category-slide[data-offset="1"] { left: 81%; }
-  .category-slide[data-offset="2"] { left: 88.5%; }
-  .category-slide[data-offset="3"] { left: 95%; }
-  .category-slide[data-offset="-2"], .category-slide[data-offset="2"] { width: 6.5vw; height: 220px; }
-  .category-slide[data-offset="-1"], .category-slide[data-offset="1"] { width: 8.5vw; height: 270px; }
-  .category-slide[data-offset="0"] { width: 52vw; height: min(390px, 105vw); }
-  .category-photo { border-radius: 5px; }
-  .category-slide[data-offset="0"] .category-photo { border-radius: 16px; }
-  .category-slide:not([data-offset="0"]) .category-card-copy { opacity: 0; }
-  .category-slide[data-offset="0"] .category-card-copy { right: 9%; left: 9%; min-height: 48px; opacity: 1; }
-  .category-card-copy { min-height: 48px; }
-  .category-card-copy strong { font-size: 16px; }
-  .carousel-dots { width: calc(100vw - 36px); }
+  .category-rail { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; width: calc(100% - 36px); height: auto; overflow: visible; touch-action: auto; }
+  .category-rail .category-slide[data-offset] { position: relative; top: auto; left: auto; width: 100%; height: auto; aspect-ratio: 1 / 1.05; visibility: visible; pointer-events: auto; transform: none; }
+  .category-rail .category-slide[data-offset] .category-photo { inset: 0; border-radius: 14px; }
+  .category-rail .category-slide[data-offset] .category-card-copy { right: 8px; bottom: 8px; left: 8px; min-height: 36px; padding: 6px; opacity: 1; }
+  .category-rail .category-slide[data-offset] .category-card-copy strong { color: var(--forest); font-size: 13px; font-weight: 600; }
+  .carousel-dots { display: none; }
   .featured-products { padding: 58px 0 64px; }
   .featured-heading { margin-bottom: 28px; }
   .featured-action { margin-top: 32px; }
