@@ -1,6 +1,6 @@
 ---
 import type { Plant } from '../data/catalog';
-import { categoryFor, priceLabel } from '../data/catalog';
+import { categoryFor, isShrub, priceLabel } from '../data/catalog';
 
 interface Props {
   plant: Plant;
@@ -11,7 +11,7 @@ const { plant, priority = false } = Astro.props;
 const category = categoryFor(plant.category);
 ---
 
-<a class="plant-card" href={'/plant/' + plant.slug + '/'} data-plant-card data-name={plant.name.toLocaleLowerCase()} data-category={plant.category} data-price={plant.price}>
+<a class="plant-card" href={'/plant/' + plant.slug + '/'} data-plant-card data-name={plant.name.toLocaleLowerCase()} data-category={plant.category} data-shrub={isShrub(plant) ? 'true' : undefined} data-price={plant.price}>
   <span class="plant-card-image">
     <img
       src={plant.image}

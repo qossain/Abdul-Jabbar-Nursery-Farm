@@ -12,7 +12,7 @@ export function getStaticPaths() {
 
 const { category } = Astro.props;
 const listings = plantsFor(category.slug);
-const hero = ['trees', 'topiary'].includes(category.slug) ? 'outdoor' : category.slug;
+const hero = ['trees', 'topiary', 'shrubs'].includes(category.slug) ? 'outdoor' : category.slug;
 ---
 
 <BaseLayout title={`${category.title} in Pattoki | Abdul Jabbar Nursery Farm`} description={`${category.description} Contact Abdul Jabbar Nursery Farm in Pattoki, Pakistan, for availability and prices.`} image={category.coverImage}>

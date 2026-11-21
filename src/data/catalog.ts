@@ -36,7 +36,7 @@ export const categories: Category[] = [
   {
     slug: 'indoor', title: 'Indoor plants', basePrice: 1200,
     images: localImages(...numberedImages('indoor-', 10, 3), ...namedImages('ornamental-', 'bird-of-paradise', 'cordyline', 'dracaena-marginata', 'coleus', 'caladium', 'fern'), 'ornamental-10-red-anthurium.webp'),
-    coverImage: '', description: 'Leaf forms and easy care plants for rooms, offices and sheltered spaces.',
+    coverImage: '', description: 'Explore indoor plants for rooms, offices and sheltered spaces. Ask our Pattoki nursery about suitable plants and current availability.',
   },
   {
     slug: 'outdoor', title: 'Outdoor plants', basePrice: 1600,
@@ -44,42 +44,47 @@ export const categories: Category[] = [
       ...namedImages('outdoor-', 'bougainvillea', 'hibiscus-shrub', 'jasmine-shrub', 'gardenia-shrub', 'oleander-shrub', 'ixora-flowering-shrub', 'lantana-plant', 'ficus-benjamina', 'duranta-golden-shrub', 'croton-shrub'),
       ...namedImages('trees-', 'neem-tree', 'amaltas-golden-shower-tree', 'jacaranda-tree', 'gulmohar-flamboyant-tree', 'banyan-sapling', 'moringa-tree', 'ficus-tree', 'jamun-tree', 'peepal-tree', 'bottlebrush-tree'),
     ),
-    coverImage: '', description: 'Trees, shrubs and sculptural greenery for gardens and open air settings.',
+    coverImage: '', description: 'Browse outdoor plants for gardens, courtyards and open spaces, including shrubs and ornamental greenery.',
   },
   {
     slug: 'fruit', title: 'Fruit plants', basePrice: 1800,
     images: localImages(...namedImages('fruit-', 'mango-sapling', 'guava-sapling', 'lemon-tree', 'orange-tree', 'pomegranate-tree', 'fig-tree', 'olive-tree', 'dragon-fruit-cactus', 'blueberry-bush', 'pineapple-plant')),
-    coverImage: '', description: 'Fruit tree varieties and edible plants for home orchards and gardens.',
+    coverImage: '', description: 'Explore fruit plants and young trees for home gardens and orchards. Contact the nursery about varieties, sizes and prices.',
   },
   {
     slug: 'bonsai', title: 'Bonsai', basePrice: 4500,
     images: localImages(...namedImages('bonsai-', 'ficus-bonsai', 'juniper-bonsai', 'bougainvillea-bonsai', 'chinese-elm-bonsai', 'jade-bonsai', 'olive-bonsai', 'pomegranate-bonsai', 'ficus-banyan-bonsai', 'azalea-bonsai', 'carmona-bonsai')),
-    coverImage: '', description: 'Small trees shaped over time for courtyards, terraces and considered interiors.',
+    coverImage: '', description: 'Discover bonsai and shaped miniature trees for terraces, courtyards and indoor spaces. Contact us to confirm availability.',
   },
   {
     slug: 'cactus', title: 'Cactus plants', basePrice: 700,
     images: localImages(...namedImages('succulents-', 'aloe-vera', 'echeveria-rosette-succulent', 'haworthia-succulent', 'jade-plant', 'prickly-pear-cactus', 'golden-barrel-cactus', 'columnar-cactus', 'agave', 'burro-tail-succulent', 'sedum-succulent')),
-    coverImage: '', description: 'Distinctive desert forms for bright windows, patios and rock gardens.',
+    coverImage: '', description: 'Browse cactus plants and succulents for bright windows, patios and rock gardens. Ask the nursery about available varieties.',
   },
   {
     slug: 'flowering', title: 'Flowering plants', basePrice: 900,
     images: localImages(...namedImages('flowering-', 'red-rose', 'pink-rose', 'marigold', 'petunia', 'geranium', 'chrysanthemum', 'bougainvillea', 'plumeria', 'hibiscus', 'zinnia'), 'ornamental-07-ornamental-grass.webp', 'ornamental-08-canna-lily.webp', 'ornamental-09-tropical-heliconia.webp'),
-    coverImage: '', description: 'Seasonal color and flowering shrubs for borders, pots and landscape plans.',
+    coverImage: '', description: 'Explore flowering plants for pots, garden borders and landscaping. Ask our nursery about seasonal selection and availability.',
   },
   {
     slug: 'palms', title: 'Palms', basePrice: 2200,
     images: localImages(...namedImages('palms-', 'areca-palm', 'date-palm', 'foxtail-palm', 'bottle-palm', 'fan-palm', 'lady-palm', 'sago-palm', 'parlour-palm', 'majesty-palm', 'coconut-palm-sapling')),
-    coverImage: '', description: 'Architectural palms for entranceways, terraces and larger gardens.',
+    coverImage: '', description: 'Browse palms for entrances, terraces and larger gardens, including the nursery’s Royal, Sylvester and Alexandra palms.',
   },
   {
     slug: 'trees', title: 'Trees', basePrice: 200,
     images: localImages('nursery-terminalia.webp'),
-    coverImage: '', description: 'Trees for gardens, avenues and landscape projects.',
+    coverImage: '', description: 'Explore trees for gardens, avenues and landscape projects, including Terminalia, Jamun and Pink Tabebuia.',
   },
   {
     slug: 'topiary', title: 'Topiary art', basePrice: 0,
     images: localImages('topiary-enhanced-swan-pair.webp'),
-    coverImage: '', description: 'Shaped plants and living sculptures for gardens and landscape projects.',
+    coverImage: '', description: 'Discover shaped plants and living sculptures, from Buxus cones and spirals to animal topiary for gardens and landscape projects.',
+  },
+  {
+    slug: 'shrubs', title: 'Shrubs and hedges', basePrice: 0,
+    images: localImages('outdoor-09-duranta-golden-shrub.webp'),
+    coverImage: '', description: 'Explore shrubs and hedging plants for garden borders, screens and outdoor spaces. Contact the nursery to check availability.',
   },
 ];
 
@@ -201,7 +206,8 @@ const nurseryTrees: Plant[] = ([
   ['Pink Tabebuia', 'pink-tabebuia'],
   ['Nursery Tree', 'tree-six'],
 ] as [string, string][]).map(([name, slug]) => ({
-  name, slug: `trees-${slug}`, category: 'trees', image: `/plant-images/nursery-${slug}.webp`,
+  name, slug: `trees-${slug}`, category: 'trees', image: `/plant-images/nursery-${slug === 'terminalia' ? 'clean-terminalia' : slug}.webp`,
+  ...(slug !== 'tree-six' ? { originalImage: `/plant-images/nursery-original-${slug}.webp` } : {}),
   price: 200, maxPrice: 5000, hideExampleActivity: true,
 }));
 
@@ -235,6 +241,7 @@ const clientPlants: Plant[] = ([
 }));
 
 export const plants: Plant[] = categories.flatMap((category) => {
+  if (category.slug === 'shrubs') return [];
   if (category.slug === 'topiary') return topiaryPlants;
   if (category.slug === 'trees') return [...clientPlants.filter((plant) => plant.category === 'trees'), ...nurseryTrees];
   const collection = names[category.slug];
@@ -251,5 +258,6 @@ export const plants: Plant[] = categories.flatMap((category) => {
 });
 
 export const categoryFor = (slug: string) => categories.find((category) => category.slug === slug);
-export const plantsFor = (slug: string) => plants.filter((plant) => plant.category === slug);
+export const isShrub = (plant: Plant) => ['outdoor-murraya', 'outdoor-duranta-gold', 'outdoor-ixora', 'outdoor-hibiscus', 'outdoor-oleander', 'outdoor-lantana', 'outdoor-pittosporum', 'outdoor-gardenia'].includes(plant.slug);
+export const plantsFor = (slug: string) => plants.filter((plant) => slug === 'shrubs' ? isShrub(plant) : plant.category === slug);
 export const priceLabel = (amount: number, maxPrice?: number) => 'Rs ' + new Intl.NumberFormat('en-PK').format(amount) + (maxPrice ? ' to Rs ' + new Intl.NumberFormat('en-PK').format(maxPrice) : '');

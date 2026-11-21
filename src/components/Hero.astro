@@ -1,20 +1,19 @@
 ---
-import { heroPhoto, heroPhotoMobile } from '../data/catalog';
 ---
 
 <section class="hero" aria-labelledby="hero-title">
   <picture class="hero-visual" aria-hidden="true">
-    <source media="(max-width: 700px)" srcset={heroPhotoMobile} />
-    <img src={heroPhoto} alt="" width="1600" height="900" fetchpriority="high" decoding="async" />
+    <source media="(max-width: 700px)" srcset="/hero-nursery-mobile-preview.webp" />
+    <img src="/hero-nursery-preview.webp" alt="" width="1600" height="900" fetchpriority="high" decoding="async" />
   </picture>
   <div class="hero-shade" aria-hidden="true"></div>
   <div class="hero-copy">
-    <p class="hero-kicker">Pattoki since 1978</p>
-    <h1 id="hero-title">A living legacy,<br /><em>shaped by nature.</em></h1>
-    <p class="hero-description">Plants and landscapes, thoughtfully grown in Pattoki.</p>
+    <h1 id="hero-title">A living legacy,<br /><em>grown with care.</em></h1>
+    <p class="hero-description">Plants and landscapes from Pattoki since 1978.</p>
     <div class="hero-actions">
-      <a class="button button-light" href="/plants/">Explore our plants</a>
-      <a class="hero-secondary" href="https://wa.me/923126047941?text=Hello%2C%20I%20would%20like%20to%20discuss%20a%20landscape%20project." target="_blank" rel="noreferrer">Plan a landscape</a>
+      <a class="hero-action" href="/plants/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 21V11M12 16C5 16 3 12 3 7c5 0 9 2 9 9Zm0-3c0-6 3-9 9-10 0 6-3 10-9 10Z" /></svg><span>Explore our plants</span></a>
+      <a class="hero-action" href="https://wa.me/923126047941?text=Hello%2C%20I%20would%20like%20to%20discuss%20a%20landscape%20project." target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M12 20v-8m-7 8c2-3 4-4 7-4s5 1 7 4M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z" /></svg><span>Start your project</span></a>
+      <a class="hero-action" href="tel:+923126047941"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M22 16.9v2.8a2 2 0 0 1-2.2 2A19.7 19.7 0 0 1 2.3 4.2a2 2 0 0 1 2-2.2h2.8a2 2 0 0 1 2 1.7l.4 2.6a2 2 0 0 1-.6 1.8L7.7 9.3a16 16 0 0 0 7 7l1.2-1.2a2 2 0 0 1 1.8-.6l2.6.4a2 2 0 0 1 1.7 2Z" /></svg><span>Call the nursery</span></a>
     </div>
   </div>
 </section>
