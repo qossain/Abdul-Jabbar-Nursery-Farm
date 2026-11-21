@@ -2,7 +2,7 @@
 import '../styles/global.css';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
-import { heroPhoto, heroPhotoMobile } from '../data/catalog';
+import { heroPhoto } from '../data/catalog';
 
 interface Props {
   title: string;
@@ -48,8 +48,8 @@ const website = {
     {home && <script type="application/ld+json" set:html={JSON.stringify(business)} />}
     {home && <script type="application/ld+json" set:html={JSON.stringify(website)} />}
     <title>{title}</title>
-    {home && <link rel="preload" as="image" href={heroPhoto} media="(min-width: 701px)" fetchpriority="high" />}
-    {home && <link rel="preload" as="image" href={heroPhotoMobile} media="(max-width: 700px)" fetchpriority="high" />}
+    {home && <link rel="preload" as="image" href="/hero-nursery-preview.webp" media="(min-width: 701px)" fetchpriority="high" />}
+    {home && <link rel="preload" as="image" href="/hero-nursery-mobile-preview.webp" media="(max-width: 700px)" fetchpriority="high" />}
   </head>
   <body class={home ? 'home-page' : 'inner-page'}>
     <a class="skip-link" href="#main">Skip to content</a>

@@ -59,7 +59,7 @@ const { plants, filterCategories = false } = Astro.props;
       const selectedCategory = category?.value ?? 'all';
       const matches = cards.filter((card) => {
         const matchesText = card.dataset.name?.includes(query) ?? false;
-        const matchesCategory = selectedCategory === 'all' || card.dataset.category === selectedCategory;
+        const matchesCategory = selectedCategory === 'all' || card.dataset.category === selectedCategory || (selectedCategory === 'shrubs' && card.dataset.shrub === 'true');
         return matchesText && matchesCategory;
       });
       const order = sort.value;
