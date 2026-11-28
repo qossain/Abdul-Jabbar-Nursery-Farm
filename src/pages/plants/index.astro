@@ -1,16 +1,19 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PlantGrid from '../../components/PlantGrid.astro';
-import { categories, plants } from '../../data/catalog';
+import { plants } from '../../data/catalog';
 ---
-
 <BaseLayout title="Plant collections | Abdul Jabbar Nursery Farm" description="Browse plant collections from Abdul Jabbar Nursery Farm in Pattoki.">
-  <main id="main" class="section-wrap">
-    <header class="page-heading">
-      <p class="section-kicker">The plant directory</p>
-      <h1>Explore the collections.</h1>
-      <p>Explore our plant collections and find the plants you are looking for.</p>
-    </header>
-    <PlantGrid plants={plants} filterCategories />
+  <main id="main" class="directory-page">
+    <div class="directory-inner">
+      <header class="directory-header">
+        <a class="directory-brand" href="/" aria-label="Abdul Jabbar Nursery Farm home"><img src="/abdul-jabbar-wordmark.webp" alt="Abdul Jabbar Nursery Farm" width="800" height="148" /></a>
+        <a class="directory-cart" href="/cart/" aria-label="Open cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l1 12H4L5 8ZM9 9V6a3 3 0 0 1 6 0v3"/></svg></a>
+      </header>
+      <section class="directory-content" aria-labelledby="directory-title">
+        <div class="directory-intro"><p class="directory-kicker">THE PLANT DIRECTORY</p><h1 id="directory-title">Explore the<br /><span>collections.</span></h1><p>Explore our plant collections and find the plants you are looking for.</p></div>
+        <PlantGrid plants={plants} filterCategories />
+      </section>
+    </div>
   </main>
 </BaseLayout>

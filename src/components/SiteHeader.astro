@@ -7,6 +7,7 @@ const { home = false } = Astro.props;
 const links = [
   { label: 'Home', href: '/' },
   { label: 'Plants', href: '/plants/' },
+  { label: 'Cart', href: '/cart/' },
   { label: 'Our story', href: '/#story' },
   { label: 'Visit Pattoki', href: 'https://www.google.com/maps/place/Abdul+Jabbar+Nursery+Farm+%26+Landscaping+Pattoki+-+Indoor+Plants+%7C+Outdoor+Plants+%7C+Fruit+Plants/data=!4m2!3m1!1s0x0:0xa20910e728765781', external: true },
   { label: 'Get in touch', href: 'https://wa.me/923126047941', external: true, contact: true },
@@ -21,6 +22,7 @@ const links = [
   <nav class="site-nav" aria-label="Main navigation">
     {links.map((link) => <a class={link.contact ? 'nav-contact' : undefined} href={link.href} target={link.external ? '_blank' : undefined} rel={link.external ? 'noreferrer' : undefined}>{link.label}</a>)}
   </nav>
+  <a class="mobile-cart" href="/cart/" aria-label="Open cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l1 12H4L5 8ZM9 9V6a3 3 0 0 1 6 0v3"/></svg></a>
   <button class="menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="mobile-nav" data-menu-toggle>
     <span class="dot-matrix" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
   </button>

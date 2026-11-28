@@ -37,6 +37,10 @@ const { plants, filterCategories = false } = Astro.props;
     </div>
   </details>}
   <span class={filterCategories ? 'result-count' : 'visually-hidden'} aria-live="polite" data-result-count>{plants.length} plants</span>
+  {filterCategories && <div class="directory-view-switch" role="group" aria-label="Choose display layout">
+    <button type="button" data-grid-view="grid" aria-label="Grid view" aria-pressed="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><rect x="14" y="14" width="6" height="6" rx="1"/></svg></button>
+    <button type="button" data-grid-view="list" aria-label="List view" aria-pressed="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M5 6h14M5 12h14M5 18h14"/></svg></button>
+  </div>}
 </div>
 <div class="plant-grid" data-plant-grid>
   {plants.map((plant, index) => <PlantCard plant={plant} priority={filterCategories && index < 4} />)}
@@ -51,6 +55,8 @@ const { plants, filterCategories = false } = Astro.props;
   const count = document.querySelector<HTMLElement>('[data-result-count]');
   const empty = document.querySelector<HTMLElement>('[data-empty-state]');
   const menu = document.querySelector<HTMLDetailsElement>('[data-sort-menu]');
+  const views = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-grid-view]'));
+  views.forEach((button) => button.addEventListener('click', () => { if (!grid) return; grid.dataset.layout = button.dataset.gridView; views.forEach((item) => item.setAttribute('aria-pressed', String(item === button))); }));
 
   if (grid && search && sort && count && empty) {
     const cards = Array.from(grid.querySelectorAll<HTMLElement>('[data-plant-card]'));

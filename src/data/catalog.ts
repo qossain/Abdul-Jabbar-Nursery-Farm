@@ -89,7 +89,7 @@ export const categories: Category[] = [
 ];
 
 categories.forEach((category) => {
-  category.coverImage = category.images[category.slug === 'outdoor' ? 7 : category.slug === 'cactus' ? 5 : 0];
+  category.coverImage = category.slug === 'indoor' ? '/plant-images/indoor-white-red-anthurium.webp' : category.images[category.slug === 'outdoor' ? 7 : category.slug === 'cactus' ? 5 : 0];
 });
 
 const names: Record<string, string[]> = {
@@ -240,7 +240,22 @@ const clientPlants: Plant[] = ([
   price, estimatedPrice: true, hideExampleActivity: true,
 }));
 
+// Client supplied indoor photos and prices; availability should be confirmed with the nursery.
+const nurseryIndoor: Plant[] = ([
+  ['Lucky Bamboo Tower', 'tower', 5000], ['Red Anthurium', 'red-anthurium', 8500],
+  ['Variegated Lucky Bamboo', 'variegated', 9000], ['Lucky Bamboo Cage', 'cage', 9000],
+  ['Peace Lily', 'peace-lily', 7500], ['Lucky Bamboo Surahi', 'surahi', 8500],
+  ['Pink Anthurium', 'pink-anthurium', 8500], ['Money Tree', 'money-tree', 7000],
+  ['Pink Aglaonema', 'aglaonema', 3000], ['Calathea Ornata', 'calathea', 4000],
+] as [string, string, number][]).map(([name, photo, price]) => ({
+  name, slug: `indoor-nursery-${photo}`, category: 'indoor', price,
+  image: `/plant-images/indoor-white-${photo}.webp`,
+  originalImage: `/plant-images/indoor-original-${photo}.webp`,
+  detail: 'Thai imported', hideExampleActivity: true,
+}));
+
 export const plants: Plant[] = categories.flatMap((category) => {
+  if (category.slug === 'indoor') return nurseryIndoor;
   if (category.slug === 'shrubs') return [];
   if (category.slug === 'topiary') return topiaryPlants;
   if (category.slug === 'trees') return [...clientPlants.filter((plant) => plant.category === 'trees'), ...nurseryTrees];

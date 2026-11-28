@@ -2,74 +2,91 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import PlantCard from '../../components/PlantCard.astro';
 import { categoryFor, plants, plantsFor, priceLabel } from '../../data/catalog';
-
-export function getStaticPaths() {
-  return plants.map((plant) => ({ params: { slug: plant.slug }, props: { plant } }));
-}
-
+import { guideFor } from '../../data/plantGuides';
+export function getStaticPaths() { return plants.map((plant) => ({ params: { slug: plant.slug }, props: { plant } })); }
 const { plant } = Astro.props;
 const category = categoryFor(plant.category)!;
 const related = plantsFor(plant.category).filter((item) => item.slug !== plant.slug).slice(0, 4);
 const photos = plant.photoVariants ?? [plant.image, ...(plant.originalImage ? [plant.originalImage] : []), ...(plant.additionalImages ?? [])].map((image) => ({ image, detail: plant.detail, price: plant.price }));
-const hasGallery = photos.length > 1;
-const message = encodeURIComponent(`Hello, I am interested in ${plant.name}${photos[0].detail ? ` (${photos[0].detail})` : ''}. Please share the current availability, size and price.`);
+const guide = guideFor(plant.slug);
+const imported = plant.slug.startsWith('indoor-nursery-');
+const label = (price?: number) => price == null ? 'Ask for price' : `${plant.estimatedPrice ? 'Est. ' : ''}${priceLabel(price, plant.maxPrice)}`;
 ---
-
-<BaseLayout title={`${plant.name} | Abdul Jabbar Nursery Farm`} description={`${plant.name}${plant.detail ? `, ${plant.detail}` : ''}. Contact Abdul Jabbar Nursery Farm in Pattoki for availability and current prices.`} image={plant.image} noindex={plant.example}>
-  <main id="main" class="section-wrap">
-    <div class:list={['product-page', { 'has-gallery': hasGallery }]}>
-      <div class:list={['product-image', { 'has-original': hasGallery }]}>
-        <div class="product-gallery-track" data-gallery-track tabindex={hasGallery ? '0' : undefined} role={hasGallery ? 'region' : undefined} aria-label={hasGallery ? `Photos of ${plant.name}` : undefined}>
-        {photos.map((photo, index) => <picture data-photo-price={photo.price == null ? 'Ask for price' : `${plant.estimatedPrice ? 'Est. ' : ''}${priceLabel(photo.price, plant.maxPrice)}`} data-photo-detail={photo.detail ?? ''} data-photo-message={encodeURIComponent(`Hello, I am interested in ${plant.name}${photo.detail ? ` (${photo.detail})` : ''}. Please share the current availability, size and price.`)}>
-          <source media="(max-width: 700px)" srcset={photo.image.replace('/plant-images/', '/plant-images/optimized/')} />
-          <img src={photo.image} alt={`${plant.name}${index ? ` photo ${index + 1}` : ''}`} width="840" height="1260" fetchpriority={index === 0 ? 'high' : undefined} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
-        </picture>)}
+<BaseLayout title={`${plant.name} | Abdul Jabbar Nursery Farm`} description={`${plant.name}. Contact Abdul Jabbar Nursery Farm in Pattoki for availability and current prices.`} image={plant.image} noindex={plant.example}>
+  <main id="main" class="section-wrap product-main">
+    <a class="product-back" href={`/plants/${category.slug}/`} aria-label="Go back" data-product-back><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m14 6-6 6 6 6"/></svg></a>
+    <a class="product-floating-cart" href="/cart/" aria-label="Open cart" data-animation-cart><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l1 12H4L5 8ZM9 9V6a3 3 0 0 1 6 0v3"/></svg></a>
+    <div class="product-layout" data-cart-product data-name={plant.name} data-slug={plant.slug} data-image={plant.image} data-example={plant.example ? 'true' : 'false'} data-estimated={plant.estimatedPrice ? 'true' : 'false'} data-max-price={plant.maxPrice}>
+      <div class="product-visual">
+        <div class="product-stage">
+          <div class="product-gallery-track" data-gallery-track tabindex={photos.length > 1 ? '0' : undefined} role="region" aria-label={`Photos of ${plant.name}`}>
+            {photos.map((photo, index) => <picture data-original={photo.image.includes('original') ? 'true' : undefined} data-photo-price={label(photo.price)} data-photo-detail={photo.detail ?? ''} data-photo-value={photo.price ?? ''}>
+              <source media="(max-width: 700px)" srcset={photo.image.replace('/plant-images/', '/plant-images/optimized/')} />
+              <img src={photo.image} alt={`${plant.name}${index ? ` photo ${index + 1}` : ''}`} width="840" height="1260" fetchpriority={index === 0 ? 'high' : undefined} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
+            </picture>)}
+          </div>
         </div>
-        {hasGallery && <div class="product-gallery-controls" role="group" aria-label="Choose a photo">
-          {photos.map((_, index) => <button type="button" data-gallery-page={index} aria-label={`Show photo ${index + 1}`} aria-pressed={index === 0 ? 'true' : 'false'}></button>)}
-        </div>}
       </div>
-      <article class="product-info">
-        <a class="product-category" href={`/plants/${category.slug}/`}>{category.title}</a>
-        <h1>{plant.name}</h1>
-        <p class="product-price" data-gallery-price aria-live="polite">{plant.price == null ? 'Ask for price' : `${plant.estimatedPrice ? 'Est. ' : ''}${priceLabel(plant.price, plant.maxPrice)}`}</p>
-        {(plant.detail || plant.photoVariants) && <p data-gallery-detail aria-live="polite">{photos[0].detail}</p>}
-        {plant.estimatedPrice && <p>Contact the nursery to confirm the current price.</p>}
-        <div class="product-actions">
-          <a class="button button-dark" data-gallery-enquiry href={`https://wa.me/923126047941?text=${message}`} target="_blank" rel="noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.5 11.6a8.5 8.5 0 0 1-12.7 7.4L3 20.5l1.5-4.6a8.5 8.5 0 1 1 16-4.3Z"/><path d="M8.5 7.8c.3-.5.6-.5.9-.5h.4l1 2.2-.7.8c.6 1.3 1.6 2.3 2.9 2.9l.8-.7 2.2 1v.4c0 .4-.1.7-.5 1-1.1.7-2.8 0-4.7-1.9S7.8 8.9 8.5 7.8Z"/></svg><span>Ask about this plant</span></a>
-          <a class="button product-call" href="tel:+923126047941"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v2.8a2 2 0 0 1-2.2 2A19.7 19.7 0 0 1 2.3 4.2a2 2 0 0 1 2-2.2h2.8a2 2 0 0 1 2 1.7l.4 2.6a2 2 0 0 1-.6 1.8L7.7 9.3a16 16 0 0 0 7 7l1.2-1.2a2 2 0 0 1 1.8-.6l2.6.4a2 2 0 0 1 1.7 2Z"/></svg><span>Call the nursery</span></a>
-        </div>
+      <article class="product-panel">
+        {photos.length > 1 && <div class="product-thumbnails" role="group" aria-label="Choose a photo">{photos.map((photo, index) => <button type="button" data-gallery-page={index} aria-label={`Show photo ${index + 1}`} aria-pressed={index === 0 ? 'true' : 'false'}><img src={photo.image.replace('/plant-images/', '/plant-images/optimized/')} alt="" width="72" height="72" loading="lazy" /></button>)}</div>}
+        <div class="product-heading"><div><a class="product-collection" href={`/plants/${category.slug}/`}>{category.title}</a><h1>{plant.name}</h1></div><p class="product-price" data-gallery-price aria-live="polite">{label(photos[0].price)}</p></div>
+        {imported && <p class="import-badge"><span aria-hidden="true">✦</span> Imported from Thailand</p>}
+        {(plant.detail || plant.photoVariants) && !imported && <p class="product-detail" data-gallery-detail aria-live="polite">{photos[0].detail}</p>}
+        <div class="product-quantity"><span>Quantity</span><div class="quantity-control"><button type="button" data-quantity-minus aria-label="Decrease quantity">−</button><output data-quantity aria-live="polite">1</output><button type="button" data-quantity-plus aria-label="Increase quantity">+</button></div></div>
+        <section class="product-description"><h2>Description</h2><p>{guide?.description ?? `${plant.name} is part of our ${category.title.toLowerCase()} collection. Contact the nursery for details about the plant currently available.`}</p></section>
+        <section class="product-specifications"><h2>Specifications</h2><dl>{guide?.botanical && <><dt>Plant type</dt><dd>{guide.botanical}</dd></>}<dt>Collection</dt><dd>{category.title}</dd>{imported && <><dt>Origin</dt><dd>Imported from Thailand</dd></>}{plant.detail && !imported && <><dt>Details</dt><dd data-spec-detail>{photos[0].detail}</dd></>}<dt>Plant height</dt><dd>Confirm with nursery</dd></dl></section>
+        {guide && <section class="product-care"><h2>Plant care</h2><div class="care-grid"><div><strong>Light</strong><span>{guide.light}</span></div><div><strong>Water</strong><span>{guide.water}</span></div></div></section>}
+        {plant.estimatedPrice && <p class="price-note">Please confirm the current price with the nursery.</p>}
+        <div class="product-purchase"><a class="cart-icon-link" href="/cart/" aria-label="Open cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l1 12H4L5 8ZM9 9V6a3 3 0 0 1 6 0v3"/></svg></a><button class="product-add" type="button" data-add-cart><span>Add to cart</span><span data-button-price>{label(photos[0].price)}</span></button></div>
       </article>
     </div>
-    <section class="related" aria-labelledby="related-title">
-      <div class="related-heading">
-        <h2 id="related-title">More in {category.title}</h2>
-        <a class="text-link" href={`/plants/${category.slug}/`}>View the collection</a>
-      </div>
-      <div class="plant-grid">
-        {related.map((item) => <PlantCard plant={item} />)}
-      </div>
-    </section>
+    <section class="related" aria-labelledby="related-title"><div class="related-heading"><h2 id="related-title">More in {category.title}</h2><a class="text-link" href={`/plants/${category.slug}/`}>View the collection</a></div><div class="plant-grid">{related.map((item) => <PlantCard plant={item} />)}</div></section>
   </main>
 </BaseLayout>
-
 <script>
+  document.querySelector<HTMLAnchorElement>('[data-product-back]')?.addEventListener('click', (event) => {
+    if (!document.referrer) return;
+    try { if (new URL(document.referrer).origin === window.location.origin && history.length > 1) { event.preventDefault(); history.back(); } } catch {}
+  });
+  const floatingControls = document.querySelectorAll<HTMLElement>('.product-back, .product-floating-cart');
+  const syncFloatingControls = () => floatingControls.forEach((control) => { const hide = window.scrollY > 80; control.classList.toggle('product-control-hidden', hide); control.tabIndex = hide ? -1 : 0; });
+  window.addEventListener('scroll', syncFloatingControls, { passive: true });
+  window.addEventListener('pageshow', syncFloatingControls);
+  syncFloatingControls();
   const track = document.querySelector<HTMLElement>('[data-gallery-track]');
   const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-gallery-page]'));
-  if (track && buttons.length) {
-    buttons.forEach((button, index) => button.addEventListener('click', () => {
-      track.scrollTo({ left: index * track.clientWidth, behavior: 'auto' });
-    }));
-    track.addEventListener('scroll', () => {
-      const active = Math.round(track.scrollLeft / track.clientWidth);
-      buttons.forEach((button, index) => button.setAttribute('aria-pressed', String(index === active)));
-      const photo = track.children[active] as HTMLElement | undefined;
-      const price = document.querySelector<HTMLElement>('[data-gallery-price]');
-      const detail = document.querySelector<HTMLElement>('[data-gallery-detail]');
-      const enquiry = document.querySelector<HTMLAnchorElement>('[data-gallery-enquiry]');
-      if (photo && price && photo.dataset.photoPrice) price.textContent = photo.dataset.photoPrice;
-      if (photo && detail) detail.textContent = photo.dataset.photoDetail ?? '';
-      if (photo && enquiry && photo.dataset.photoMessage) enquiry.href = `https://wa.me/923126047941?text=${photo.dataset.photoMessage}`;
-    }, { passive: true });
-  }
+  const activePhoto = () => track?.children[Math.round(track.scrollLeft / track.clientWidth)] as HTMLElement | undefined;
+  function syncPhoto() { if (!track) return; const active = Math.round(track.scrollLeft / track.clientWidth); buttons.forEach((button, i) => button.setAttribute('aria-pressed', String(i === active))); const photo = activePhoto(); const price = document.querySelector<HTMLElement>('[data-gallery-price]'); const buttonPrice = document.querySelector<HTMLElement>('[data-button-price]'); const detail = document.querySelector<HTMLElement>('[data-gallery-detail]'); const spec = document.querySelector<HTMLElement>('[data-spec-detail]'); if (photo && price && buttonPrice) { price.textContent = photo.dataset.photoPrice || ''; buttonPrice.textContent = photo.dataset.photoPrice || ''; } if (photo && detail) detail.textContent = photo.dataset.photoDetail || ''; if (photo && spec) spec.textContent = photo.dataset.photoDetail || ''; }
+  buttons.forEach((button, index) => button.addEventListener('click', () => { track?.scrollTo({left: index * track.clientWidth, behavior: 'auto'}); syncPhoto(); }));
+  track?.addEventListener('scroll', syncPhoto, {passive:true});
+  let quantity = 1; const output = document.querySelector<HTMLElement>('[data-quantity]');
+  document.querySelector<HTMLButtonElement>('[data-quantity-minus]')?.addEventListener('click', () => { quantity = Math.max(1, quantity - 1); if (output) output.textContent = String(quantity); });
+  document.querySelector<HTMLButtonElement>('[data-quantity-plus]')?.addEventListener('click', () => { quantity = Math.min(99, quantity + 1); if (output) output.textContent = String(quantity); });
+  const add = document.querySelector<HTMLButtonElement>('[data-add-cart]'); const product = document.querySelector<HTMLElement>('[data-cart-product]');
+  window.addEventListener('pageshow', () => { if (add) add.disabled = false; });
+  if (add && product) add.addEventListener('click', async () => {
+    if (add.disabled) return;
+    const photo = activePhoto();
+    const item = { slug:product.dataset.slug, name:product.dataset.name, image:product.dataset.image, detail:photo?.dataset.photoDetail || '', price:photo?.dataset.photoValue ? Number(photo.dataset.photoValue) : null, maxPrice:product.dataset.maxPrice ? Number(product.dataset.maxPrice) : null, estimated:product.dataset.estimated === 'true', example:product.dataset.example === 'true', quantity };
+    try {
+      const parsed = JSON.parse(localStorage.getItem('abdul-jabbar-cart-v1') || '[]');
+      const cart = Array.isArray(parsed) ? parsed : [];
+      const existing = cart.find((entry) => entry.slug === item.slug && entry.detail === item.detail && entry.price === item.price);
+      if (existing) existing.quantity = Math.min(99, (Number(existing.quantity) || 0) + quantity); else cart.push(item);
+      localStorage.setItem('abdul-jabbar-cart-v1', JSON.stringify(cart));
+    } catch { add.textContent = 'Unable to save cart'; return; }
+    add.disabled = true;
+    const target = document.querySelector<HTMLElement>('[data-animation-cart]');
+    const source = photo?.querySelector<HTMLImageElement>('img');
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && target && source && typeof source.animate === 'function') {
+      const imageRect = source.getBoundingClientRect(); const buttonRect = add.getBoundingClientRect(); const destination = target.getBoundingClientRect();
+      const visible = imageRect.bottom > 0 && imageRect.top < innerHeight;
+      const startX = visible ? imageRect.left + imageRect.width / 2 : buttonRect.left + buttonRect.width / 2;
+      const startY = visible ? Math.max(45, Math.min(innerHeight - 45, imageRect.top + imageRect.height / 2)) : buttonRect.top + buttonRect.height / 2;
+      const endX = destination.left + destination.width / 2; const endY = destination.top + destination.height / 2;
+      const flying = document.createElement('img'); flying.src = source.currentSrc || source.src; flying.alt = ''; flying.className = 'cart-flying-image'; flying.style.left = `${startX - 38}px`; flying.style.top = `${startY - 38}px`; document.body.append(flying);
+      try { await flying.animate([{ transform:'translate(0, 0) scale(1)', opacity:1 }, { transform:`translate(${(endX-startX)*.55}px, ${(endY-startY)*.55 - 70}px) scale(.65)`, opacity:1, offset:.55 }, { transform:`translate(${endX-startX}px, ${endY-startY}px) scale(.12)`, opacity:0 }], {duration:750, easing:'ease-in-out', fill:'forwards'}).finished; } catch {} finally { flying.remove(); }
+    }
+    window.location.href = '/cart/';
+  });
 </script>
